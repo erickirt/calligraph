@@ -38,7 +38,7 @@ export default function Page() {
 
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Installation</h2>
-        <CodeBlock copyable>npm install calligraphy</CodeBlock>
+        <CodeBlock>npm install calligraphy</CodeBlock>
       </div>
 
       <div className={styles.section}>

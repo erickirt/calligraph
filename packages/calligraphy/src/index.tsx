@@ -63,7 +63,7 @@ export function Calligraphy(props: CalligraphyProps) {
   const text = typeof children === "string" ? children : String(children ?? "");
 
   const nextIdRef = useRef(text.length);
-  const enteringKeysRef = useRef<Map<string, number>>(new Map());
+  const enteringKeysRef = useRef<Set<string>>(new Set());
 
   const [prevText, setPrevText] = useState(text);
   const [charKeys, setCharKeys] = useState<string[]>(() =>
@@ -78,13 +78,12 @@ export function Calligraphy(props: CalligraphyProps) {
       newKeys[newIdx] = charKeys[oldIdx];
     }
 
-    const entering = new Map<string, number>();
-    let enterIdx = 0;
+    const entering = new Set<string>();
     for (let i = 0; i < newKeys.length; i++) {
       if (!newKeys[i]) {
         const key = `c${nextIdRef.current++}`;
         newKeys[i] = key;
-        entering.set(key, enterIdx++);
+        entering.add(key);
       }
     }
 
@@ -94,7 +93,7 @@ export function Calligraphy(props: CalligraphyProps) {
   }
 
   const base: Transition = transition ?? {
-    duration: 0.35,
+    duration: 0.4,
     ease: [0.19, 1, 0.22, 1],
   };
 
@@ -110,8 +109,7 @@ export function Calligraphy(props: CalligraphyProps) {
       <AnimatePresence mode="popLayout" initial={false}>
         {text.split("").map((char: string, i: number) => {
           const key = charKeys[i];
-          const enterIdx = enteringKeysRef.current.get(key);
-          const isEntering = enterIdx !== undefined;
+          const isEntering = enteringKeysRef.current.has(key);
 
           return (
             <motion.span
@@ -120,12 +118,7 @@ export function Calligraphy(props: CalligraphyProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{
-                ...base,
-                ...(isEntering && {
-                  delay: enterIdx * 0.02,
-                }),
-              }}
+              transition={base}
               style={{
                 display: "inline-block",
                 whiteSpace: "pre",

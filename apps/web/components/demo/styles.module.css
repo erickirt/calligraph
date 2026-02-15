@@ -13,15 +13,20 @@
 
 .button {
   display: flex;
-  gap: 8px;
   align-items: center;
-  padding: 8px 16px;
+  justify-content: center;
   font-family: inherit;
   cursor: pointer;
   background: var(--crimson-9);
   border: none;
   border-radius: 100px;
-  transition: background 0.15s;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 .button:hover {
@@ -41,6 +46,7 @@
 }
 
 .text {
+  padding: 8px 16px;
   font-size: 20px;
   font-weight: 500;
   line-height: 1.5;
