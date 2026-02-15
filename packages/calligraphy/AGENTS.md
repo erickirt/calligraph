@@ -23,7 +23,6 @@ src/
 - **Client component** — the `"use client"` directive is required. This component uses `useState` and `useRef`.
 - **Peer dependencies** — `motion`, `react`, `react-dom`. Do not add these to `dependencies`.
 - **Single export** — consumers import `{ Calligraphy }` from `"calligraphy"`. Don't add default exports.
-- **Props extend `HTMLMotionProps<"span">`** — don't narrow the type or add boolean feature flags. If new behavior is needed, prefer a new component export over prop additions.
 - **No internal state leaks** — `computeLCS`, key refs, and prev-text tracking are implementation details. Don't export them.
 
 ## Build

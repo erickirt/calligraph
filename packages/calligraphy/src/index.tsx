@@ -3,15 +3,11 @@
 import {
   AnimatePresence,
   type HTMLMotionProps,
+  MotionConfig,
   motion,
-  type Transition,
 } from "motion/react";
 import { useRef, useState } from "react";
 
-/**
- * Compute the Longest Common Subsequence between two strings.
- * Returns an array of [oldIndex, newIndex] pairs for matched characters.
- */
 function computeLCS(oldStr: string, newStr: string): [number, number][] {
   const m = oldStr.length;
   const n = newStr.length;
@@ -49,23 +45,40 @@ function computeLCS(oldStr: string, newStr: string): [number, number][] {
   return pairs;
 }
 
-type CalligraphyProps = HTMLMotionProps<"span">;
+type CalligraphyProps = HTMLMotionProps<"span"> & {
+  drift?: number;
+};
 
 /**
- * Calligraphy — fluid text transitions.
+ * Calligraphy - {@link https://calligraphy.raphaelsalaja.com | Documentation}
  *
- * Shared characters slide to their new positions while
- * entering characters fade in and exiting characters fade out.
+ * Animates text changes at the character level.
+ *
+ * @remarks
+ * When `children` changes, characters common to both strings
+ * reposition via layout animation while new characters drift in
+ * and removed characters drift out.
+ *
+ *
+ * @param props - Accepts all {@link HTMLMotionProps} for a `span` element.
+ *
+ * @param props.drift - Horizontal spread in pixels for entering/exiting
+ * characters. Left-side characters drift in from the left, right-side from
+ * the right. Set to `0` to disable. Defaults to `20`.
+ *
+ * @param props.transition - Custom motion transition. Defaults to
+ * `{duration: 0.4, ease: [0.19, 1, 0.22, 1]}`.
+ *
  */
 export function Calligraphy(props: CalligraphyProps) {
-  const { children, transition, className, style, ...rest } = props;
+  const { children, transition, drift = 20, className, style, ...rest } = props;
 
   const text = typeof children === "string" ? children : String(children ?? "");
 
   const nextIdRef = useRef(text.length);
-  const enteringKeysRef = useRef<Set<string>>(new Set());
 
   const [prevText, setPrevText] = useState(text);
+
   const [charKeys, setCharKeys] = useState<string[]>(() =>
     text.split("").map((_, i) => `c${i}`),
   );
@@ -78,57 +91,55 @@ export function Calligraphy(props: CalligraphyProps) {
       newKeys[newIdx] = charKeys[oldIdx];
     }
 
-    const entering = new Set<string>();
     for (let i = 0; i < newKeys.length; i++) {
       if (!newKeys[i]) {
-        const key = `c${nextIdRef.current++}`;
-        newKeys[i] = key;
-        entering.add(key);
+        newKeys[i] = `c${nextIdRef.current++}`;
       }
     }
-
-    enteringKeysRef.current = entering;
     setPrevText(text);
     setCharKeys(newKeys);
   }
 
-  const base: Transition = transition ?? {
-    duration: 0.4,
-    ease: [0.19, 1, 0.22, 1],
-  };
-
   return (
-    <motion.span
-      className={className}
-      style={{
-        display: "inline-flex",
-        ...style,
-      }}
-      {...rest}
+    <MotionConfig
+      transition={
+        transition ?? {
+          duration: 0.4,
+          ease: [0.19, 1, 0.22, 1],
+        }
+      }
     >
-      <AnimatePresence mode="popLayout" initial={false}>
-        {text.split("").map((char: string, i: number) => {
-          const key = charKeys[i];
-          const _isEntering = enteringKeysRef.current.has(key);
+      <motion.span
+        className={className}
+        style={{
+          display: "inline-flex",
+          ...style,
+        }}
+        {...rest}
+      >
+        <AnimatePresence mode="popLayout" initial={false}>
+          {text.split("").map((char: string, i: number) => {
+            const key = charKeys[i];
 
-          return (
-            <motion.span
-              key={key}
-              layout="position"
-              initial={{ opacity: 0, filter: "blur(2px)", scale: 0.95 }}
-              animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-              exit={{ opacity: 0, filter: "blur(2px)", scale: 0.95 }}
-              transition={base}
-              style={{
-                display: "inline-block",
-                whiteSpace: "pre",
-              }}
-            >
-              {char}
-            </motion.span>
-          );
-        })}
-      </AnimatePresence>
-    </motion.span>
+            const progress = text.length <= 1 ? 0 : i / (text.length - 1);
+
+            const offset = (progress - 0.5) * drift;
+
+            return (
+              <motion.span
+                key={key}
+                layout="position"
+                initial={{ opacity: 0, x: offset }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: offset }}
+                style={{ display: "inline-block", whiteSpace: "pre" }}
+              >
+                {char}
+              </motion.span>
+            );
+          })}
+        </AnimatePresence>
+      </motion.span>
+    </MotionConfig>
   );
 }
