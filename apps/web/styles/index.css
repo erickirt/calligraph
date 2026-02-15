@@ -1,0 +1,81 @@
+@import "@radix-ui/colors/gray.css";
+@import "@radix-ui/colors/gray-alpha.css";
+@import "@radix-ui/colors/blue.css";
+@import "@radix-ui/colors/blue-alpha.css";
+@import "@radix-ui/colors/purple.css";
+@import "@radix-ui/colors/green.css";
+@import "@radix-ui/colors/orange.css";
+@import "@radix-ui/colors/crimson.css";
+@import "@radix-ui/colors/gray-dark.css";
+@import "@radix-ui/colors/gray-dark-alpha.css";
+@import "@radix-ui/colors/blue-dark.css";
+@import "@radix-ui/colors/blue-dark-alpha.css";
+@import "@radix-ui/colors/purple-dark.css";
+@import "@radix-ui/colors/green-dark.css";
+@import "@radix-ui/colors/orange-dark.css";
+@import "@radix-ui/colors/crimson-dark.css";
+
+@import "./styles.reset.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+:root,
+.light,
+.light-theme {
+  --bg: var(--gray-1);
+  --bg-subtle: var(--gray-2);
+  --selection: var(--blue-a4);
+  --font-mono:
+    "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", "Menlo", "Courier New",
+    monospace;
+}
+
+.dark,
+.dark-theme {
+  --bg: var(--gray-12);
+  --bg-subtle: var(--gray-2);
+  --selection: var(--blue-a4);
+}
+
+:root {
+  font-family: Inter, sans-serif;
+  font-feature-settings:
+    "liga" 1,
+    "calt" 1;
+}
+
+@supports (font-variation-settings: normal) {
+  :root {
+    font-family: InterVariable, sans-serif;
+  }
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--gray-12);
+  background: var(--bg);
+}
+
+body {
+  min-height: 100dvh;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}

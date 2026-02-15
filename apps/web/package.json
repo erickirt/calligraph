@@ -1,0 +1,26 @@
+{
+  "name": "web",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev --turbopack",
+    "lint": "biome check --fix --unsafe ."
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.3.0",
+    "@radix-ui/colors": "^3.0.0",
+    "agentation": "^2.2.1",
+    "calligraphy": "workspace:*",
+    "motion": "^12.0.0",
+    "next": "^15.2.0",
+    "next-themes": "^0.4.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.3"
+  }
+}
