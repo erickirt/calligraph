@@ -2,6 +2,18 @@
   "name": "calligraphy",
   "version": "0.0.1",
   "description": "Fluid text transitions powered by Motion",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raphaelsalaja/calligraphy"
+  },
+  "keywords": [
+    "react",
+    "animation",
+    "text",
+    "transition",
+    "motion"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,6 +26,7 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "bunchee",
     "dev": "bunchee --watch",

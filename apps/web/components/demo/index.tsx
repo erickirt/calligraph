@@ -1,7 +1,7 @@
 "use client";
 
 import { Calligraphy } from "calligraphy";
-import { MotionConfig, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 
