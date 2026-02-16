@@ -57,3 +57,4 @@ MIT
 ## Acknowledgments
 
 - [Jace](https://github.com/jace-ai) for pushing me to build this
+- Inspired by [Family](https://family.co/)
