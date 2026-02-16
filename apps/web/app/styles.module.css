@@ -94,8 +94,8 @@
 
 .table td {
   padding: 6px 12px 6px 0;
-  color: var(--gray-11);
   vertical-align: top;
+  color: var(--gray-11);
   border-bottom: 1px solid var(--gray-3);
 }
 
@@ -103,7 +103,7 @@
   padding: 1px 5px;
   font-family: "JetBrains Mono", var(--font-mono), monospace;
   font-size: 12px;
-  background: var(--gray-3);
+  background: var(--gray-2);
   border-radius: 4px;
 }
 

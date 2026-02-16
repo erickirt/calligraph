@@ -9,7 +9,7 @@
   padding: 12px 16px;
   margin: 0;
   overflow-x: auto;
-  background: var(--gray-3);
+  background: var(--gray-2);
   border-radius: 10px;
 }
 
@@ -32,7 +32,7 @@
   height: 28px;
   color: var(--gray-9);
   cursor: pointer;
-  background: var(--gray-3);
+  background: var(--gray-2);
   border: 1px solid var(--gray-5);
   border-radius: 6px;
   opacity: 0;
