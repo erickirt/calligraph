@@ -20,37 +20,3 @@
   line-height: 20px;
   white-space: pre-wrap;
 }
-
-.copyButton {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  color: var(--gray-9);
-  cursor: pointer;
-  background: var(--gray-2);
-  border: 1px solid var(--gray-5);
-  border-radius: 6px;
-  opacity: 0;
-  transition:
-    opacity 0.15s,
-    color 0.15s,
-    background 0.15s;
-}
-
-.root:hover .copyButton {
-  opacity: 1;
-}
-
-.copyButton:hover {
-  color: var(--gray-12);
-  background: var(--gray-4);
-}
-
-.copyButton:active {
-  background: var(--gray-5);
-}
