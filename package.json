@@ -1,5 +1,5 @@
 {
-  "name": "calligraphy",
+  "name": "calligraph",
   "private": true,
   "scripts": {
     "build": "turbo run build",

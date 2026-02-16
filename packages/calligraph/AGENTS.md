@@ -1,10 +1,10 @@
-# Calligraphy — Agent Guidelines
+# Calligraph — Agent Guidelines
 
 Rules for AI agents working on this package.
 
 ## Architecture
 
-Single-file package. One export: `Calligraphy`. Keep it that way unless there's a strong reason to split.
+Single-file package. One export: `Calligraph`. Keep it that way unless there's a strong reason to split.
 
 ```
 src/
@@ -14,7 +14,7 @@ src/
 ## Key internals
 
 - `computeLCS` — standard LCS dynamic programming over two strings, returns `[oldIndex, newIndex][]` pairs
-- `Calligraphy` — the component. Uses `useState` + render-phase diffing (not `useEffect`) to reconcile character keys when `children` changes
+- `Calligraph` — the component. Uses `useState` + render-phase diffing (not `useEffect`) to reconcile character keys when `children` changes
 - Character identity is tracked via string keys (`c0`, `c1`, ...) managed by `nextIdRef`
 - `enteringKeysRef` tracks which keys are new so they skip `layout` animation on their first frame
 
@@ -22,7 +22,7 @@ src/
 
 - **Client component** — the `"use client"` directive is required. This component uses `useState` and `useRef`.
 - **Peer dependencies** — `motion`, `react`, `react-dom`. Do not add these to `dependencies`.
-- **Single export** — consumers import `{ Calligraphy }` from `"calligraphy"`. Don't add default exports.
+- **Single export** — consumers import `{ Calligraph }` from `"calligraph"`. Don't add default exports.
 - **No internal state leaks** — `computeLCS`, key refs, and prev-text tracking are implementation details. Don't export them.
 
 ## Build

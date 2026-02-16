@@ -1,20 +1,20 @@
-# Calligraphy
+# Calligraph
 
-[![npm version](https://img.shields.io/npm/v/calligraphy)](https://www.npmjs.com/package/calligraphy)
-[![npm downloads](https://img.shields.io/npm/dm/calligraphy)](https://www.npmjs.com/package/calligraphy)
+[![npm version](https://img.shields.io/npm/v/calligraph)](https://www.npmjs.com/package/calligraph)
+[![npm downloads](https://img.shields.io/npm/dm/calligraph)](https://www.npmjs.com/package/calligraph)
 
 Fluid text transitions powered by [Motion](https://motion.dev). Shared characters slide to their new positions while entering characters fade in and exiting ones fade out.
 
 ## Install
 
 ```bash
-npm install calligraphy
+npm install calligraph
 ```
 
 ## Usage
 
 ```tsx
-import { Calligraphy } from "calligraphy";
+import { Calligraph } from "calligraph";
 import { useState } from "react";
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
 
   return (
     <>
-      <Calligraphy>{text}</Calligraphy>
+      <Calligraph>{text}</Calligraph>
       <button onClick={() => setText("World")}>Change</button>
     </>
   );
@@ -34,9 +34,9 @@ When `children` changes, characters common to both strings slide into their new 
 ## Custom transitions
 
 ```tsx
-<Calligraphy transition={{ type: "spring", stiffness: 200, damping: 20 }}>
+<Calligraph transition={{ type: "spring", stiffness: 200, damping: 20 }}>
   {text}
-</Calligraphy>
+</Calligraph>
 ```
 
 ## Requirements

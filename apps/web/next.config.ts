@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["calligraphy"],
+  transpilePackages: ["@raphaelsalaja/calligraph"],
 };
 
 export default nextConfig;

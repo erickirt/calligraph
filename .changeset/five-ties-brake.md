@@ -1,5 +1,0 @@
----
-"calligraphy": major
----
-
-initial release

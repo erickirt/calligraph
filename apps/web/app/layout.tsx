@@ -26,9 +26,9 @@ const openRunde = localFont({
   display: "swap",
 });
 
-const title = "Calligraphy";
+const title = "Calligraph";
 const description = "Fluid text transitions powered by Motion";
-const url = "https://calligraphy.raphaelsalaja.com";
+const url = "https://calligraph.raphaelsalaja.com";
 
 export const metadata: Metadata = {
   title,

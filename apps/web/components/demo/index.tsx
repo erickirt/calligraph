@@ -1,6 +1,6 @@
 "use client";
 
-import { Calligraphy } from "calligraphy";
+import { Calligraph } from "@raphaelsalaja/calligraph";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.css";
@@ -33,12 +33,12 @@ function useMeasure<T extends HTMLElement = HTMLElement>(): [
   return [ref, bounds];
 }
 
-const defaultWords = ["Calligraphy", "Craft", "Creative", "Create"];
+const defaultWords = ["Calligraph", "Craft", "Creative", "Create"];
 
 export function Demo() {
   const [wordList, setWordList] = useState(defaultWords);
   const [inputValue, setInputValue] = useState(defaultWords.join(", "));
-  const [text, setText] = useState("Calligraphy");
+  const [text, setText] = useState("Calligraph");
   const [ref, bounds] = useMeasure();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +80,7 @@ export function Demo() {
           }}
         >
           <div ref={ref} className={styles.wrapper}>
-            <Calligraphy className={styles.text}>{text}</Calligraphy>
+            <Calligraph className={styles.text}>{text}</Calligraph>
           </div>
         </motion.button>
       </div>

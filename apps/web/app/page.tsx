@@ -2,7 +2,7 @@ import { CodeBlock } from "../components/code-block";
 import { Demo } from "../components/demo";
 import styles from "./styles.module.css";
 
-const usageCode = `import { Calligraphy } from "calligraphy";
+const usageCode = `import { Calligraph } from "calligraph";
 import { faker } from '@faker-js/faker';
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
 
   return (
     <>
-      <Calligraphy>{text}</Calligraphy>
+      <Calligraph>{text}</Calligraph>
       <button type="button" onClick={onClick}>Shuffle</button>
     </>
   )
@@ -24,10 +24,10 @@ export default function Page() {
   return (
     <div className={styles.page}>
       <div className={styles.heading}>
-        <h1 className={styles.title}>Calligraphy</h1>
+        <h1 className={styles.title}>Calligraph</h1>
         <div className={styles.versionContainer}>
           <a
-            href="https://www.npmjs.com/package/calligraphy"
+            href="https://www.npmjs.com/package/calligraph"
             className={styles.version}
             target="_blank"
             rel="noopener noreferrer"
@@ -36,7 +36,7 @@ export default function Page() {
           </a>
           /
           <a
-            href="https://github.com/raphaelsalaja/calligraphy"
+            href="https://github.com/raphaelsalaja/calligraph"
             className={styles.version}
             target="_blank"
             rel="noopener noreferrer"
@@ -64,7 +64,7 @@ export default function Page() {
       <Demo />
 
       <Section title="Installation">
-        <CodeBlock>npm install calligraphy</CodeBlock>
+        <CodeBlock>npm install calligraph</CodeBlock>
       </Section>
 
       <Section title="Usage">

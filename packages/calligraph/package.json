@@ -1,16 +1,16 @@
 {
-  "name": "calligraphy",
-  "version": "0.0.1",
+  "name": "@raphaelsalaja/calligraph",
+  "version": "1.0.0",
   "description": "Fluid text transitions powered by Motion",
   "author": "Raphael Salaja",
   "license": "MIT",
-  "homepage": "https://calligraphy.raphaelsalaja.com",
+  "homepage": "https://calligraph.raphaelsalaja.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/raphaelsalaja/calligraphy"
+    "url": "https://github.com/raphaelsalaja/calligraph"
   },
   "bugs": {
-    "url": "https://github.com/raphaelsalaja/calligraphy/issues"
+    "url": "https://github.com/raphaelsalaja/calligraph/issues"
   },
   "keywords": [
     "react",
@@ -33,8 +33,7 @@
   ],
   "sideEffects": false,
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "scripts": {
     "build": "bunchee",

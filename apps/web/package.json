@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -10,7 +10,7 @@
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",
     "agentation": "^2.2.1",
-    "calligraphy": "workspace:*",
+    "@raphaelsalaja/calligraph": "workspace:*",
     "motion": "^12.0.0",
     "next": "^15.2.0",
     "react": "^19.0.0",

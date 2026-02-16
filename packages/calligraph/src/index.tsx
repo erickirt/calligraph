@@ -48,12 +48,12 @@ function computeLCS(oldStr: string, newStr: string): [number, number][] {
   return pairs;
 }
 
-type CalligraphyProps = HTMLMotionProps<"span"> & {
+type CalligraphProps = HTMLMotionProps<"span"> & {
   drift?: number;
 };
 
 /**
- * Calligraphy - {@link https://calligraphy.raphaelsalaja.com | Documentation}
+ * Calligraph - {@link https://calligraph.raphaelsalaja.com | Documentation}
  *
  * Animates text changes at the character level.
  *
@@ -73,7 +73,7 @@ type CalligraphyProps = HTMLMotionProps<"span"> & {
  * `{duration: 0.4, ease: [0.19, 1, 0.22, 1]}`.
  *
  */
-export function Calligraphy(props: CalligraphyProps) {
+export function Calligraph(props: CalligraphProps) {
   const { children, transition, drift = 20, className, style, ...rest } = props;
 
   const text = typeof children === "string" ? children : String(children ?? "");
