@@ -7,7 +7,7 @@
   "homepage": "https://calligraph.raphaelsalaja.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/raphaelsalaja/calligraph"
+    "url": "git+https://github.com/raphaelsalaja/calligraph.git"
   },
   "bugs": {
     "url": "https://github.com/raphaelsalaja/calligraph/issues"

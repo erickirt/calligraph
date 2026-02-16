@@ -10,6 +10,7 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 jobs:
   release:
@@ -25,8 +26,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          registry-url: "https://registry.npmjs.org"
           cache: pnpm
+
+      - name: Install latest npm
+        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -34,12 +39,24 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Create release PR or publish
+      - name: Create release PR
+        id: changesets
         uses: changesets/action@v1
         with:
           commit: "chore: version packages"
           title: "chore: version packages"
-          publish: pnpm changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to npm
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        working-directory: packages/calligraph
+        run: |
+          CURRENT=$(node -p "require('./package.json').version")
+          PUBLISHED=$(npm view calligraph version 2>/dev/null || echo "0.0.0")
+          if [ "$CURRENT" != "$PUBLISHED" ]; then
+            echo "Publishing calligraph@$CURRENT"
+            npm publish --provenance
+          else
+            echo "calligraph@$CURRENT already published, skipping"
+          fi
