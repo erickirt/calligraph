@@ -76,7 +76,7 @@ type CalligraphProps = Omit<HTMLMotionProps<"span">, "children"> & {
  *
  */
 export function Calligraph(props: CalligraphProps) {
-  const { children, transition, drift = 20, className, style, ...rest } = props;
+  const { children, transition, drift = 10, className, style, ...rest } = props;
 
   const text = String(children ?? "");
 
@@ -105,13 +105,19 @@ export function Calligraph(props: CalligraphProps) {
     setCharKeys(newKeys);
   }
 
+  const defaultDuration = 0.38;
+  const defaultEase = [0.19, 1, 0.22, 1] as [number, number, number, number];
+
+  const t = transition as
+    | { duration?: number; ease?: typeof defaultEase }
+    | undefined;
+  const duration = t?.duration ?? defaultDuration;
+  const ease = t?.ease ?? defaultEase;
+
   return (
     <MotionConfig
       transition={
-        transition ?? {
-          duration: 0.4,
-          ease: [0.19, 1, 0.22, 1],
-        }
+        transition ?? { duration: defaultDuration, ease: defaultEase }
       }
     >
       <motion.span
@@ -131,14 +137,47 @@ export function Calligraph(props: CalligraphProps) {
 
             const offset = (progress - 0.5) * drift;
 
+            const stagger = progress * 0.04;
+
             return (
               <motion.span
                 key={key}
                 aria-hidden="true"
                 layout="position"
-                initial={{ opacity: 0, x: offset }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: offset }}
+                initial={{
+                  opacity: 0,
+                  x: offset,
+                  scale: 0.85,
+                  filter: "blur(4px)",
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  scale: 1,
+                  filter: "blur(0px)",
+                  transition: {
+                    duration,
+                    ease,
+                    delay: stagger,
+                  },
+                }}
+                exit={{
+                  opacity: 0,
+                  x: offset,
+                  scale: 0.85,
+                  filter: "blur(4px)",
+                  transition: {
+                    duration: (duration as number) * 0.6,
+                    ease,
+                  },
+                }}
+                transition={{
+                  layout: {
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 35,
+                  },
+                }}
                 style={{ display: "inline-block", whiteSpace: "pre" }}
               >
                 {char}

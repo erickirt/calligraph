@@ -14,7 +14,7 @@
 :root,
 .light,
 .light-theme {
-  --bg: var(--gray-1);
+  --bg: #fff;
   --bg-subtle: var(--gray-2);
   --selection: var(--blue-a4);
   --font-mono:
@@ -24,7 +24,7 @@
 
 .dark,
 .dark-theme {
-  --bg: var(--gray-12);
+  --bg: #000;
   --bg-subtle: var(--gray-2);
   --selection: var(--blue-a4);
 }
