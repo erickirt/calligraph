@@ -26,7 +26,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
@@ -39,6 +40,7 @@
     "build": "bunchee",
     "dev": "bunchee --watch",
     "lint": "biome check --fix --unsafe .",
+    "typecheck": "tsc --noEmit",
     "prepublishOnly": "bunchee"
   },
   "peerDependencies": {

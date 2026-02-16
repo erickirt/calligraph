@@ -32,7 +32,7 @@ function computeLCS(oldStr: string, newStr: string): [number, number][] {
 
   while (i > 0 && j > 0) {
     if (oldStr[i - 1] === newStr[j - 1]) {
-      pairs.unshift([i - 1, j - 1]);
+      pairs.push([i - 1, j - 1]);
       i--;
       j--;
     } else if (
@@ -45,10 +45,12 @@ function computeLCS(oldStr: string, newStr: string): [number, number][] {
     }
   }
 
+  pairs.reverse();
   return pairs;
 }
 
-type CalligraphProps = HTMLMotionProps<"span"> & {
+type CalligraphProps = Omit<HTMLMotionProps<"span">, "children"> & {
+  children?: string | number;
   drift?: number;
 };
 
@@ -76,7 +78,7 @@ type CalligraphProps = HTMLMotionProps<"span"> & {
 export function Calligraph(props: CalligraphProps) {
   const { children, transition, drift = 20, className, style, ...rest } = props;
 
-  const text = typeof children === "string" ? children : String(children ?? "");
+  const text = String(children ?? "");
 
   const nextIdRef = useRef(text.length);
 
@@ -113,6 +115,7 @@ export function Calligraph(props: CalligraphProps) {
       }
     >
       <motion.span
+        aria-label={text}
         className={className}
         style={{
           display: "inline-flex",
@@ -131,6 +134,7 @@ export function Calligraph(props: CalligraphProps) {
             return (
               <motion.span
                 key={key}
+                aria-hidden="true"
                 layout="position"
                 initial={{ opacity: 0, x: offset }}
                 animate={{ opacity: 1, x: 0 }}

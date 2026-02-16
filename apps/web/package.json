@@ -5,7 +5,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev --turbopack",
-    "lint": "biome check --fix --unsafe ."
+    "lint": "biome check --fix --unsafe .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",
@@ -14,7 +15,8 @@
     "motion": "^12.0.0",
     "next": "^15.2.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "shiki": "^3.22.0"
   },
   "devDependencies": {
     "@types/node": "^25.2.3",

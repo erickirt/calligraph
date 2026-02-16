@@ -1,21 +1,20 @@
+import pkg from "calligraph/package.json" with { type: "json" };
 import { CodeBlock } from "../components/code-block";
 import { Demo } from "../components/demo";
 import styles from "./styles.module.css";
 
 const usageCode = `import { Calligraph } from "calligraph";
-import { faker } from '@faker-js/faker';
+import { useState } from "react";
 
 function App() {
-  const text = faker.word.adjective()
-  
-  function onClick() {
-    text = faker.word.adjective();
-  }
+  const [text, setText] = useState("Hello");
 
   return (
     <>
       <Calligraph>{text}</Calligraph>
-      <button type="button" onClick={onClick}>Shuffle</button>
+      <button type="button" onClick={() => setText("World")}>
+        Change
+      </button>
     </>
   )
 }`;
@@ -32,7 +31,7 @@ export default function Page() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            v1.0.0
+            v{pkg.version}
           </a>
           /
           <a
@@ -64,19 +63,11 @@ export default function Page() {
       <Demo />
 
       <Section title="Installation">
-        <CodeBlock>npm install calligraph</CodeBlock>
+        <CodeBlock language="bash">npm install calligraph</CodeBlock>
       </Section>
 
       <Section title="Usage">
         <CodeBlock>{usageCode}</CodeBlock>
-      </Section>
-
-      <Section title="Best practices">
-        <p className={styles.description}>
-          Works best with short strings of similar length. Animate the
-          parent&rsquo;s width to prevent layout jumps, and use shorter
-          durations for frequent updates, longer ones for deliberate changes.
-        </p>
       </Section>
     </div>
   );
