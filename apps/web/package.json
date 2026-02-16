@@ -5,7 +5,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev --turbopack",
-    "lint": "biome check --fix --unsafe ."
+    "lint": "biome check --fix --unsafe .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",

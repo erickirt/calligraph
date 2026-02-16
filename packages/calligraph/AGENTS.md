@@ -16,7 +16,7 @@ src/
 - `computeLCS` — standard LCS dynamic programming over two strings, returns `[oldIndex, newIndex][]` pairs
 - `Calligraph` — the component. Uses `useState` + render-phase diffing (not `useEffect`) to reconcile character keys when `children` changes
 - Character identity is tracked via string keys (`c0`, `c1`, ...) managed by `nextIdRef`
-- `enteringKeysRef` tracks which keys are new so they skip `layout` animation on their first frame
+- Entering characters get a drift offset based on position (left-side drifts left, right-side drifts right) via the `drift` prop
 
 ## Constraints
 
