@@ -44,6 +44,12 @@ When `children` changes, characters common to both strings slide into their new 
 - React 18+
 - Motion 11+
 
+## Sponsors
+
+If Calligraph is useful to you or your team, consider [sponsoring the project](https://github.com/sponsors/raphaelsalaja).
+
+<!-- sponsors --><!-- sponsors -->
+
 ## License
 
 MIT
