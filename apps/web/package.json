@@ -15,7 +15,8 @@
     "motion": "^12.0.0",
     "next": "^15.2.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "shiki": "^3.22.0"
   },
   "devDependencies": {
     "@types/node": "^25.2.3",

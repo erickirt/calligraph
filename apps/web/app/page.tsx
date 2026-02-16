@@ -63,7 +63,7 @@ export default function Page() {
       <Demo />
 
       <Section title="Installation">
-        <CodeBlock>npm install calligraph</CodeBlock>
+        <CodeBlock language="bash">npm install calligraph</CodeBlock>
       </Section>
 
       <Section title="Usage">

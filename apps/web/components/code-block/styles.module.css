@@ -1,21 +1,21 @@
 .root {
-  display: flex;
-  align-items: center;
   width: 100%;
-  padding: 12px 16px;
-  background: var(--gray-2);
+  overflow: hidden;
   border-radius: 10px;
-  box-shadow: 0 0 0 1px var(--gray-4);
 }
 
-.code {
-  flex: 1;
-  min-width: 1px;
-  min-height: 1px;
+.root pre {
+  padding: 12px 16px;
+  margin: 0;
+  overflow-x: auto;
+  background: var(--gray-3);
+  border-radius: 10px;
+}
+
+.root code {
   font-family: "JetBrains Mono", var(--font-mono), monospace;
   font-size: 12px;
   font-weight: 400;
   line-height: 20px;
-  color: var(--gray-11);
   white-space: pre-wrap;
 }
