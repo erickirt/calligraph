@@ -35,12 +35,12 @@ importers:
       '@radix-ui/colors':
         specifier: ^3.0.0
         version: 3.0.0
-      '@raphaelsalaja/calligraph':
-        specifier: workspace:*
-        version: link:../../packages/calligraph
       agentation:
         specifier: ^2.2.1
         version: 2.2.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      calligraph:
+        specifier: workspace:*
+        version: link:../../packages/calligraph
       motion:
         specifier: ^12.0.0
         version: 12.34.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)

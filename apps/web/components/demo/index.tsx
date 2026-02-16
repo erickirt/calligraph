@@ -1,6 +1,6 @@
 "use client";
 
-import { Calligraph } from "@raphaelsalaja/calligraph";
+import { Calligraph } from "calligraph";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.css";
