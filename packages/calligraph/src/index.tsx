@@ -49,7 +49,10 @@ function computeLCS(oldStr: string, newStr: string): [number, number][] {
   return pairs;
 }
 
-type CalligraphProps = Omit<HTMLMotionProps<"span">, "children"> & {
+type CalligraphProps = Omit<
+  React.ComponentPropsWithoutRef<"span">,
+  "children"
+> & {
   children?: string | number;
   drift?: number;
 };
@@ -72,12 +75,9 @@ type CalligraphProps = Omit<HTMLMotionProps<"span">, "children"> & {
  * small edits produce subtle drift, large rewrites produce full spread.
  * Set to `0` to disable. Defaults to `10`.
  *
- * @param props.transition - Custom motion transition. Defaults to
- * `{duration: 0.4, ease: [0.19, 1, 0.22, 1]}`.
- *
  */
 export function Calligraph(props: CalligraphProps) {
-  const { children, transition, drift = 10, className, style, ...rest } = props;
+  const { children, drift = 15, className, style, ...rest } = props;
 
   const text = String(children ?? "");
 
@@ -89,7 +89,7 @@ export function Calligraph(props: CalligraphProps) {
     text.split("").map((_, i) => `c${i}`),
   );
 
-  const [changeRatio, setChangeRatio] = useState(1);
+  const [changeRatio, setChangeRatio] = useState(0);
 
   if (text !== prevText) {
     const matches = computeLCS(prevText, text);
@@ -111,39 +111,27 @@ export function Calligraph(props: CalligraphProps) {
     setChangeRatio(text.length > 0 ? newCount / text.length : 1);
   }
 
-  const defaultDuration = 0.38;
-  const defaultEase = [0.19, 1, 0.22, 1] as [number, number, number, number];
-
-  const t = transition as
-    | { duration?: number; ease?: typeof defaultEase }
-    | undefined;
-  const duration = t?.duration ?? defaultDuration;
-  const ease = t?.ease ?? defaultEase;
-
   return (
     <MotionConfig
-      transition={
-        transition ?? { duration: defaultDuration, ease: defaultEase }
-      }
+      transition={{
+        duration: 0.38,
+        ease: [0.19, 1, 0.22, 1],
+      }}
     >
-      <motion.span
-        aria-label={text}
-        className={className}
+      <span
         style={{
           display: "inline-flex",
           ...style,
         }}
+        className={className}
         {...rest}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           {text.split("").map((char: string, i: number) => {
             const key = charKeys[i];
-
             const progress = text.length <= 1 ? 0 : i / (text.length - 1);
-
             const offset = (progress - 0.5) * drift * changeRatio;
-
-            const stagger = progress * 0.04;
+            const stagger = progress * 0.02;
 
             return (
               <motion.span
@@ -153,46 +141,33 @@ export function Calligraph(props: CalligraphProps) {
                 initial={{
                   opacity: 0,
                   x: offset,
-                  scale: 0.85,
-                  filter: "blur(4px)",
                 }}
                 animate={{
                   opacity: 1,
                   x: 0,
-                  scale: 1,
-                  filter: "blur(0px)",
                   transition: {
-                    duration,
-                    ease,
                     delay: stagger,
                   },
                 }}
                 exit={{
                   opacity: 0,
                   x: offset,
-                  scale: 0.85,
-                  filter: "blur(4px)",
                   transition: {
-                    duration: (duration as number) * 0.6,
-                    ease,
+                    duration: 0.22,
+                    delay: stagger,
                   },
                 }}
-                transition={{
-                  layout: {
-                    type: "spring",
-                    stiffness: 150,
-                    damping: 19,
-                    mass: 1.2,
-                  },
+                style={{
+                  display: "inline-block",
+                  whiteSpace: "pre",
                 }}
-                style={{ display: "inline-block", whiteSpace: "pre" }}
               >
                 {char}
               </motion.span>
             );
           })}
         </AnimatePresence>
-      </motion.span>
+      </span>
     </MotionConfig>
   );
 }
