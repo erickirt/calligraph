@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  AnimatePresence,
-  type HTMLMotionProps,
-  MotionConfig,
-  motion,
-} from "motion/react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useRef, useState } from "react";
 
 function computeLCS(oldStr: string, newStr: string): [number, number][] {
@@ -54,7 +49,12 @@ type CalligraphProps = Omit<
   "children"
 > & {
   children?: string | number;
-  drift?: number;
+  as?: React.ElementType;
+  drift?: { x?: number; y?: number };
+
+  stagger?: number;
+  initial?: boolean;
+  onComplete?: () => void;
 };
 
 /**
@@ -67,17 +67,36 @@ type CalligraphProps = Omit<
  * reposition via layout animation while new characters drift in
  * and removed characters drift out.
  *
+ * @param props - Accepts all standard `span` props plus the extras below.
  *
- * @param props - Accepts all {@link HTMLMotionProps} for a `span` element.
+ * @param props.as - Wrapper element type. Defaults to `"span"`.
  *
- * @param props.drift - Maximum horizontal spread in pixels for entering/exiting
- * characters. Automatically scaled by the fraction of characters that changed —
- * small edits produce subtle drift, large rewrites produce full spread.
- * Set to `0` to disable. Defaults to `10`.
+ * @param props.drift - Maximum spread in pixels for entering/exiting characters.
+ * `{ x, y }` — each axis is automatically scaled by the fraction of characters
+ * that changed. Small edits produce subtle drift, large rewrites produce full
+ * spread. Defaults to `{ x: 15, y: 0 }`.
  *
+ * @param props.stagger - Seconds of delay spread across characters by their
+ * position. Higher values produce a more pronounced cascade. Defaults to `0.02`.
+ *
+ * @param props.initial - When `true`, characters animate in on first mount.
+ * Defaults to `false`.
+ *
+ * @param props.onComplete - Fired when the last entering character finishes its
+ * animate transition. Will not fire when the text becomes empty.
  */
 export function Calligraph(props: CalligraphProps) {
-  const { children, drift = 15, className, style, ...rest } = props;
+  const {
+    children,
+    as: Component = "span",
+    drift: { x: driftX = 15, y: driftY = 0 } = {},
+    stagger = 0.02,
+    initial: animateInitial = false,
+    onComplete,
+    className,
+    style,
+    ...rest
+  } = props;
 
   const text = String(children ?? "");
 
@@ -118,7 +137,8 @@ export function Calligraph(props: CalligraphProps) {
         ease: [0.19, 1, 0.22, 1],
       }}
     >
-      <span
+      <Component
+        aria-label={text}
         style={{
           display: "inline-flex",
           ...style,
@@ -126,12 +146,14 @@ export function Calligraph(props: CalligraphProps) {
         className={className}
         {...rest}
       >
-        <AnimatePresence mode="popLayout" initial={false}>
+        <AnimatePresence mode="popLayout" initial={animateInitial}>
           {text.split("").map((char: string, i: number) => {
             const key = charKeys[i];
             const progress = text.length <= 1 ? 0 : i / (text.length - 1);
-            const offset = (progress - 0.5) * drift * changeRatio;
-            const stagger = progress * 0.02;
+            const offsetX = (progress - 0.5) * driftX * changeRatio;
+            const offsetY = (progress - 0.5) * driftY * changeRatio;
+            const delay = progress * stagger;
+            const isLast = i === text.length - 1;
 
             return (
               <motion.span
@@ -140,23 +162,29 @@ export function Calligraph(props: CalligraphProps) {
                 layout="position"
                 initial={{
                   opacity: 0,
-                  x: offset,
+                  x: offsetX,
+                  y: offsetY,
                 }}
                 animate={{
                   opacity: 1,
                   x: 0,
+                  y: 0,
                   transition: {
-                    delay: stagger,
+                    delay,
                   },
                 }}
                 exit={{
                   opacity: 0,
-                  x: offset,
+                  x: offsetX,
+                  y: offsetY,
                   transition: {
                     duration: 0.22,
-                    delay: stagger,
+                    delay,
                   },
                 }}
+                onAnimationComplete={
+                  isLast && onComplete ? onComplete : undefined
+                }
                 style={{
                   display: "inline-block",
                   whiteSpace: "pre",
@@ -167,7 +195,7 @@ export function Calligraph(props: CalligraphProps) {
             );
           })}
         </AnimatePresence>
-      </span>
+      </Component>
     </MotionConfig>
   );
 }

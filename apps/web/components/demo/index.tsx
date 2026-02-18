@@ -57,10 +57,10 @@ export function Demo() {
     }
   };
 
-  const shuffle = useCallback(() => {
+  const cycle = useCallback(() => {
     setText((prev) => {
-      const others = wordList.filter((w) => w !== prev);
-      return others[Math.floor(Math.random() * others.length)] ?? prev;
+      const idx = wordList.indexOf(prev);
+      return wordList[(idx + 1) % wordList.length] ?? prev;
     });
   }, [wordList]);
 
@@ -72,7 +72,7 @@ export function Demo() {
           animate={{
             width: bounds.width > 0 ? bounds.width : "auto",
           }}
-          onClick={shuffle}
+          onClick={cycle}
           className={styles.button}
           transition={{
             duration: 0.4,
