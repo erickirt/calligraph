@@ -98,10 +98,10 @@ export function NumberRenderer({
 
           return (
             <motion.span
-                key={`col-${colIndex}`}
-                layout="position"
-                style={{ display: "inline-block" }}
-              >
+              key={`col-${colIndex}`}
+              layout="position"
+              style={{ display: "inline-block" }}
+            >
               <AnimatePresence mode="popLayout" initial={animateInitial}>
                 <motion.span
                   key={digitKeys[i]}
