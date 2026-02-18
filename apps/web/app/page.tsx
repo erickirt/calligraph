@@ -12,7 +12,15 @@ const usage = `import { Calligraph } from "calligraph";
 <Calligraph>Text</Calligraph>
 `;
 
-const palette = ["crimson", "violet", "indigo", "cyan", "teal", "orange", "plum"] as const;
+const palette = [
+  "crimson",
+  "violet",
+  "indigo",
+  "cyan",
+  "teal",
+  "orange",
+  "plum",
+] as const;
 
 function useThemeRandomizer() {
   const applied = useRef(false);
@@ -43,7 +51,9 @@ function useThemeRandomizer() {
     }
     link.href = URL.createObjectURL(
       new Blob(
-        [`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="${fill}"/></svg>`],
+        [
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="${fill}"/></svg>`,
+        ],
         { type: "image/svg+xml" },
       ),
     );
@@ -57,7 +67,15 @@ const item = {
   animate: { opacity: 1, filter: "blur(0px)", y: 0 },
 };
 
-function Reveal({ children, className, as = "div" }: { children: React.ReactNode; className?: string; as?: "div" | "p" | "footer" }) {
+function Reveal({
+  children,
+  className,
+  as = "div",
+}: {
+  children: React.ReactNode;
+  className?: string;
+  as?: "div" | "p" | "footer";
+}) {
   const Tag = motion[as];
   return (
     <Tag className={className} variants={item} transition={transition}>
