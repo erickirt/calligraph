@@ -9,7 +9,7 @@ const digitVariants = {
     y: dir > 0 ? "33%" : "-33%",
     opacity: 0,
     scale: 0.5,
-    filter: "blur(4px)",
+    filter: "blur(2px)",
   }),
   animate: ({ delay }: DigitCustom) => ({
     y: 0,
@@ -22,7 +22,7 @@ const digitVariants = {
     y: dir > 0 ? "-33%" : "33%",
     opacity: 0,
     scale: 0.5,
-    filter: "blur(4px)",
+    filter: "blur(2px)",
     transition: { delay },
   }),
 };
