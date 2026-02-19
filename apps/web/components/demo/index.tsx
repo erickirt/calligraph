@@ -24,23 +24,22 @@ const fmt = new Intl.NumberFormat("en-US", {
 function useListCycle<T>(defaults: T[], parse: (raw: string) => T[]) {
   const [list, setList] = useState(defaults);
   const [input, setInput] = useState(defaults.join(" | "));
-  const [current, setCurrent] = useState(defaults[0]);
+  const [index, setIndex] = useState(0);
 
   const commit = useCallback(() => {
     const parsed = parse(input);
     if (parsed.length > 0) {
       setList(parsed);
       setInput(parsed.join(" | "));
-      setCurrent(parsed[0]);
+      setIndex(0);
     }
   }, [input, parse]);
 
   const cycle = useCallback(() => {
-    setCurrent((prev) => {
-      const idx = list.indexOf(prev);
-      return list[(idx + 1) % list.length];
-    });
-  }, [list]);
+    setIndex((prev) => (prev + 1) % list.length);
+  }, [list.length]);
+
+  const current = list[index] ?? list[0];
 
   return { list, input, setInput, current, commit, cycle } as const;
 }

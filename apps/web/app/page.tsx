@@ -12,51 +12,23 @@ const usage = `import { Calligraph } from "calligraph";
 <Calligraph>Text</Calligraph>
 `;
 
-const palette = [
-  "crimson",
-  "violet",
-  "indigo",
-  "cyan",
-  "teal",
-  "orange",
-  "plum",
-] as const;
-
-function useThemeRandomizer() {
+function useThemeColor() {
   const applied = useRef(false);
 
   useEffect(() => {
     if (applied.current) return;
     applied.current = true;
 
-    const color = palette[Math.floor(Math.random() * palette.length)];
-    if (color === "crimson") return;
-
     const root = document.documentElement;
+    const name = root.dataset.color;
+    if (!name || name === "crimson") return;
+
     const computed = getComputedStyle(root);
 
     for (const step of [8, 9, 10]) {
-      const value = computed.getPropertyValue(`--${color}-${step}`).trim();
+      const value = computed.getPropertyValue(`--${name}-${step}`).trim();
       if (value) root.style.setProperty(`--crimson-${step}`, value);
     }
-
-    const fill = computed.getPropertyValue(`--${color}-9`).trim();
-    if (!fill) return;
-
-    let link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "icon";
-      document.head.appendChild(link);
-    }
-    link.href = URL.createObjectURL(
-      new Blob(
-        [
-          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="${fill}"/></svg>`,
-        ],
-        { type: "image/svg+xml" },
-      ),
-    );
   }, []);
 }
 
@@ -85,7 +57,7 @@ function Reveal({
 }
 
 export default function Page() {
-  useThemeRandomizer();
+  useThemeColor();
 
   return (
     <motion.div

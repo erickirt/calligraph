@@ -1,6 +1,7 @@
 import { Agentation } from "agentation";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { headers } from "next/headers";
 import "@/styles/index.css";
 
 const openRunde = localFont({
@@ -32,6 +33,11 @@ const description = "Fluid text transitions powered by Motion";
 
 const url = "https://calligraph.raphaelsalaja.com";
 
+export async function generateViewport(): Promise<Viewport> {
+  const h = await headers();
+  return { themeColor: h.get("x-color-hex") || "#e5484d" };
+}
+
 export const metadata: Metadata = {
   title,
   description,
@@ -59,13 +65,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const h = await headers();
+  const color = h.get("x-color-name") || "crimson";
+
   return (
-    <html lang="en" className={openRunde.variable}>
+    <html lang="en" className={openRunde.variable} data-color={color}>
       <body>
         {children}
         {process.env.NODE_ENV === "development" && <Agentation />}
