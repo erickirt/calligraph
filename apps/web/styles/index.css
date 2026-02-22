@@ -28,8 +28,11 @@
 }
 
 html {
+  scrollbar-gutter: stable;
   -moz-osx-font-smoothing: grayscale;
   color: var(--gray-12);
+  scrollbar-color: var(--gray-a4) transparent;
+  scrollbar-width: thin;
   background: var(--bg);
 }
 
