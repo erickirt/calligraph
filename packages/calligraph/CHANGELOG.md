@@ -1,5 +1,11 @@
 # calligraph
 
+## 1.2.0
+
+### Minor Changes
+
+- fca75a2: Add `"slots"` variant for slot-machine style digit transitions and `autoSize` prop that animates wrapper width to match content. Refactor key reconciliation and shared utilities into dedicated modules.
+
 ## 1.1.2
 
 ### Patch Changes

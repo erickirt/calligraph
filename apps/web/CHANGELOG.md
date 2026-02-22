@@ -1,5 +1,12 @@
 # web
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [fca75a2]
+  - calligraph@1.2.0
+
 ## 0.0.10
 
 ### Patch Changes
