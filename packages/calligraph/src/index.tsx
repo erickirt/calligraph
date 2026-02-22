@@ -1,7 +1,10 @@
 "use client";
 
 import type { Transition } from "motion/react";
+import { motion } from "motion/react";
+import { useCallback, useEffect, useState } from "react";
 import { NumberRenderer } from "./number";
+import { SlotsRenderer } from "./slots";
 import { TextRenderer } from "./text";
 
 const animations = {
@@ -18,14 +21,51 @@ export type CalligraphProps = Omit<
   "children"
 > & {
   children?: string | number;
-  variant?: "text" | "number";
+  variant?: "text" | "number" | "slots";
   animation?: Animation;
   as?: React.ElementType;
   drift?: { x?: number; y?: number };
   stagger?: number;
   initial?: boolean;
   onComplete?: () => void;
+  autoSize?: boolean;
 };
+
+function AutoSizeWrapper({
+  children,
+  transition,
+}: {
+  children: React.ReactNode;
+  transition: Transition;
+}) {
+  const [element, setElement] = useState<HTMLElement | null>(null);
+  const [width, setWidth] = useState(0);
+
+  const ref = useCallback((node: HTMLElement | null) => {
+    setElement(node);
+  }, []);
+
+  useEffect(() => {
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setWidth(entry.contentRect.width);
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [element]);
+
+  return (
+    <motion.span
+      animate={{ width: width > 0 ? width : "auto" }}
+      transition={transition}
+      style={{ display: "inline-flex" }}
+    >
+      <span ref={ref} style={{ display: "inline-flex" }}>
+        {children}
+      </span>
+    </motion.span>
+  );
+}
 
 /**
  * Calligraph — {@link https://calligraph.raphaelsalaja.com | Documentation}
@@ -33,7 +73,8 @@ export type CalligraphProps = Omit<
  * Fluid text and number transitions powered by Motion.
  *
  * @param props.variant - `"text"` for LCS character diffing, `"number"` for
- * rolling vertical digits. Defaults to `"text"`.
+ * rolling vertical digits, `"slots"` for slot-machine digit spin.
+ * Defaults to `"text"`.
  *
  * @param props.animation - Spring preset: `"smooth"`, `"snappy"`, or
  * `"bouncy"`. Defaults to `"smooth"` for text, `"snappy"` for number.
@@ -51,6 +92,9 @@ export type CalligraphProps = Omit<
  * Defaults to `false`.
  *
  * @param props.onComplete - Fired when the last character finishes animating.
+ *
+ * @param props.autoSize - When `true`, the wrapper animates its width to
+ * match content. Defaults to `true`.
  */
 export function Calligraph(props: CalligraphProps) {
   const {
@@ -62,43 +106,45 @@ export function Calligraph(props: CalligraphProps) {
     stagger = 0.02,
     initial: animateInitial = false,
     onComplete,
+    autoSize = true,
     className,
     style,
     ...rest
   } = props;
 
   const transition =
-    animations[animation ?? (variant === "number" ? "snappy" : "default")];
+    animations[
+      animation ??
+        (variant === "number" || variant === "slots" ? "snappy" : "default")
+    ];
+
+  const rendererProps = {
+    text: String(children ?? ""),
+    Component,
+    transition,
+    stagger,
+    animateInitial,
+    onComplete,
+    className,
+    style,
+    rest,
+  };
+
+  let content: React.ReactNode;
 
   if (variant === "number") {
-    return (
-      <NumberRenderer
-        text={String(children ?? "")}
-        Component={Component}
-        transition={transition}
-        stagger={stagger}
-        animateInitial={animateInitial}
-        onComplete={onComplete}
-        className={className}
-        style={style}
-        rest={rest}
-      />
+    content = <NumberRenderer {...rendererProps} />;
+  } else if (variant === "slots") {
+    content = <SlotsRenderer {...rendererProps} />;
+  } else {
+    content = (
+      <TextRenderer {...rendererProps} driftX={driftX} driftY={driftY} />
     );
   }
 
-  return (
-    <TextRenderer
-      text={String(children ?? "")}
-      Component={Component}
-      transition={transition}
-      driftX={driftX}
-      driftY={driftY}
-      stagger={stagger}
-      animateInitial={animateInitial}
-      onComplete={onComplete}
-      className={className}
-      style={style}
-      rest={rest}
-    />
-  );
+  if (autoSize) {
+    return <AutoSizeWrapper transition={transition}>{content}</AutoSizeWrapper>;
+  }
+
+  return content;
 }

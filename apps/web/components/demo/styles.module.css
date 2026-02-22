@@ -26,22 +26,18 @@
   overflow: hidden;
   font-family: inherit;
   cursor: pointer;
-  background: var(--crimson-9);
+  background: var(--gray-12);
   border: none;
   border-radius: 100px;
 }
 
 .button:hover {
-  background: var(--crimson-10);
+  background: var(--gray-11);
 }
 
 .button:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--crimson-8);
-}
-
-.wrapper {
-  white-space: nowrap;
+  box-shadow: 0 0 0 2px var(--gray-8);
 }
 
 .text {

@@ -48,12 +48,6 @@ When `children` changes, characters common to both strings slide into their new 
 
 If Calligraph is useful to you or your team, consider [sponsoring the project](https://github.com/sponsors/raphaelsalaja).
 
-<!-- sponsors --><!-- sponsors -->
-
-## License
-
-MIT
-
 ## Acknowledgments
 
 - [Jace](https://github.com/jacethings) for pushing me to build this

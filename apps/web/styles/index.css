@@ -1,25 +1,6 @@
 @import "@radix-ui/colors/gray.css";
 @import "@radix-ui/colors/gray-alpha.css";
-@import "@radix-ui/colors/blue.css";
-@import "@radix-ui/colors/blue-alpha.css";
-@import "@radix-ui/colors/crimson.css";
-@import "@radix-ui/colors/violet.css";
-@import "@radix-ui/colors/indigo.css";
-@import "@radix-ui/colors/cyan.css";
-@import "@radix-ui/colors/teal.css";
-@import "@radix-ui/colors/orange.css";
-@import "@radix-ui/colors/plum.css";
 @import "@radix-ui/colors/gray-dark.css";
-@import "@radix-ui/colors/gray-dark-alpha.css";
-@import "@radix-ui/colors/blue-dark.css";
-@import "@radix-ui/colors/blue-dark-alpha.css";
-@import "@radix-ui/colors/crimson-dark.css";
-@import "@radix-ui/colors/violet-dark.css";
-@import "@radix-ui/colors/indigo-dark.css";
-@import "@radix-ui/colors/cyan-dark.css";
-@import "@radix-ui/colors/teal-dark.css";
-@import "@radix-ui/colors/orange-dark.css";
-@import "@radix-ui/colors/plum-dark.css";
 
 @import "./styles.reset.css";
 
@@ -28,7 +9,7 @@
 .light-theme {
   --bg: #fff;
   --bg-subtle: var(--gray-2);
-  --selection: var(--blue-a4);
+  --selection: var(--gray-a4);
   --font-mono:
     "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", "Menlo", "Courier New",
     monospace;
@@ -38,7 +19,7 @@
 .dark-theme {
   --bg: #000;
   --bg-subtle: var(--gray-2);
-  --selection: var(--blue-a4);
+  --selection: var(--gray-a4);
 }
 
 :root {
@@ -52,7 +33,10 @@ html {
 }
 
 body {
+  max-width: 640px;
   min-height: 100dvh;
+  padding-inline: 16px;
+  margin: 0 auto;
 }
 
 ::selection {

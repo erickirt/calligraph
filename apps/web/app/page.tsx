@@ -2,7 +2,6 @@
 
 import pkg from "calligraph/package.json" with { type: "json" };
 import { motion } from "motion/react";
-import { useEffect, useRef } from "react";
 import { CodeBlock } from "../components/code-block";
 import { Demo } from "../components/demo";
 import styles from "./styles.module.css";
@@ -11,26 +10,6 @@ const usage = `import { Calligraph } from "calligraph";
 
 <Calligraph>Text</Calligraph>
 `;
-
-function useThemeColor() {
-  const applied = useRef(false);
-
-  useEffect(() => {
-    if (applied.current) return;
-    applied.current = true;
-
-    const root = document.documentElement;
-    const name = root.dataset.color;
-    if (!name || name === "crimson") return;
-
-    const computed = getComputedStyle(root);
-
-    for (const step of [8, 9, 10]) {
-      const value = computed.getPropertyValue(`--${name}-${step}`).trim();
-      if (value) root.style.setProperty(`--crimson-${step}`, value);
-    }
-  }, []);
-}
 
 const transition = { duration: 0.5, ease: [0.19, 1, 0.22, 1] as const };
 
@@ -57,8 +36,6 @@ function Reveal({
 }
 
 export default function Page() {
-  useThemeColor();
-
   return (
     <motion.div
       className={styles.page}

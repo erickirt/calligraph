@@ -1,9 +1,7 @@
 "use client";
 
 import { Calligraph } from "calligraph";
-import { motion } from "motion/react";
 import { useCallback, useState } from "react";
-import { useMeasure } from "../../hooks/use-measure";
 import styles from "./styles.module.css";
 
 const variants = ["Text", "Number"] as const;
@@ -57,30 +55,6 @@ const parsePrices = (raw: string) =>
     .filter(Boolean)
     .filter((s) => !Number.isNaN(Number.parseFloat(s)));
 
-function Pill({
-  onClick,
-  children,
-}: {
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  const [ref, bounds] = useMeasure();
-
-  return (
-    <motion.button
-      type="button"
-      animate={{ width: bounds.width > 0 ? bounds.width : "auto" }}
-      onClick={onClick}
-      className={styles.button}
-      transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
-    >
-      <div ref={ref} className={styles.wrapper}>
-        {children}
-      </div>
-    </motion.button>
-  );
-}
-
 function Control({
   label,
   htmlFor,
@@ -124,7 +98,7 @@ export function Demo() {
   return (
     <div className={styles.root}>
       <div className={styles.content}>
-        <Pill onClick={active.cycle}>
+        <button type="button" className={styles.button} onClick={active.cycle}>
           {variant === "Text" ? (
             <Calligraph
               variant="text"
@@ -142,7 +116,7 @@ export function Demo() {
               {fmt.format(Number(prices.current))}
             </Calligraph>
           )}
-        </Pill>
+        </button>
       </div>
 
       <div className={styles.footer}>
