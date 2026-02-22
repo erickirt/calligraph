@@ -2,7 +2,6 @@
 
 import NumberFlow from "@number-flow/react";
 import { Calligraph } from "calligraph";
-import Link from "next/link";
 import React, { useState } from "react";
 import { TextMorph } from "torph/react";
 import { Check } from "../icons/check";
@@ -69,7 +68,7 @@ const rows: Row[] = [
 
   { kind: "divider", label: "Formatting" },
   {
-    label: "Formatting",
+    label: "Intl.NumberFormat",
     calligraph: true,
     torph: true,
     numberflow: true,
@@ -84,12 +83,6 @@ const rows: Row[] = [
     torph: false,
     numberflow: false,
   },
-  // {
-  //   label: "Multi-framework",
-  //   calligraph: false,
-  //   torph: true,
-  //   numberflow: true,
-  // },
   {
     label: "React",
     calligraph: true,

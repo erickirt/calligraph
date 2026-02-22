@@ -8,12 +8,8 @@ import {
   useTransform,
 } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-
-const isDigit = (c: string) => c >= "0" && c <= "9";
-
-function mod(n: number, m: number) {
-  return ((n % m) + m) % m;
-}
+import { reconcileDigitKeys } from "./reconcile";
+import { isDigit, mod } from "./shared";
 
 function DigitNum({
   n,
@@ -156,56 +152,15 @@ export function SlotsRenderer({
   const dirRef = useRef(1);
 
   if (text !== prevText) {
-    const toNum = (s: string) => parseFloat(s.replace(/[^0-9.-]/g, "")) || 0;
-    dirRef.current = Math.sign(toNum(text) - toNum(prevText));
-
-    const oldChars = prevText.split("");
-
-    const firstDigit = (arr: string[]) => {
-      const idx = arr.findIndex((c) => isDigit(c));
-      return idx === -1 ? arr.length : idx;
-    };
-    const newPrefixLen = firstDigit(chars);
-    const oldPrefixLen = firstDigit(oldChars);
-    const minPrefix = Math.min(newPrefixLen, oldPrefixLen);
-
-    const newKeys: number[] = new Array(chars.length);
-
-    for (let i = 0; i < newPrefixLen; i++) {
-      newKeys[i] =
-        i < minPrefix && chars[i] === oldChars[i]
-          ? digitKeys[i]
-          : nextIdRef.current++;
-    }
-
-    const oldBody = oldChars.slice(oldPrefixLen);
-    const newBody = chars.slice(newPrefixLen);
-    const oldBodyKeys = digitKeys.slice(oldPrefixLen);
-    const maxBodyLen = Math.max(oldBody.length, newBody.length);
-
-    const padOld = [
-      ...Array<string>(Math.max(0, maxBodyLen - oldBody.length)).fill(""),
-      ...oldBody,
-    ];
-    const padNew = [
-      ...Array<string>(Math.max(0, maxBodyLen - newBody.length)).fill(""),
-      ...newBody,
-    ];
-    const padKeys = [
-      ...Array<number>(Math.max(0, maxBodyLen - oldBodyKeys.length)).fill(-1),
-      ...oldBodyKeys,
-    ];
-
-    const bodyOffset = maxBodyLen - newBody.length;
-    for (let i = 0; i < newBody.length; i++) {
-      const pi = bodyOffset + i;
-      newKeys[newPrefixLen + i] =
-        padNew[pi] === padOld[pi] && padKeys[pi] >= 0
-          ? padKeys[pi]
-          : nextIdRef.current++;
-    }
-
-    setDigitKeys(newKeys);
+    const result = reconcileDigitKeys(
+      prevText,
+      text,
+      digitKeys,
+      nextIdRef.current,
+    );
+    nextIdRef.current = result.nextId;
+    dirRef.current = result.direction;
+    setDigitKeys(result.keys);
     setPrevText(text);
   }
 

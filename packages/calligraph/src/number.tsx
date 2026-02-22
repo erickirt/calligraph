@@ -1,10 +1,8 @@
 import type { Transition } from "motion/react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useRef, useState } from "react";
-
-const isDigit = (c: string) => c >= "0" && c <= "9";
-
-const distance = 8;
+import { reconcileDigitKeys } from "./reconcile";
+import { DIGIT_DISTANCE, isDigit } from "./shared";
 
 export function NumberRenderer({
   text,
@@ -37,56 +35,15 @@ export function NumberRenderer({
   const dirRef = useRef(1);
 
   if (text !== prevText) {
-    const toNum = (s: string) => parseFloat(s.replace(/[^0-9.-]/g, "")) || 0;
-    dirRef.current = toNum(text) >= toNum(prevText) ? 1 : -1;
-
-    const oldChars = prevText.split("");
-
-    const firstDigit = (arr: string[]) => {
-      const idx = arr.findIndex((c) => isDigit(c));
-      return idx === -1 ? arr.length : idx;
-    };
-    const newPrefixLen = firstDigit(chars);
-    const oldPrefixLen = firstDigit(oldChars);
-    const minPrefix = Math.min(newPrefixLen, oldPrefixLen);
-
-    const newKeys: number[] = new Array(chars.length);
-
-    for (let i = 0; i < newPrefixLen; i++) {
-      newKeys[i] =
-        i < minPrefix && chars[i] === oldChars[i]
-          ? digitKeys[i]
-          : nextIdRef.current++;
-    }
-
-    const oldBody = oldChars.slice(oldPrefixLen);
-    const newBody = chars.slice(newPrefixLen);
-    const oldBodyKeys = digitKeys.slice(oldPrefixLen);
-    const maxBodyLen = Math.max(oldBody.length, newBody.length);
-
-    const padOld = [
-      ...Array<string>(Math.max(0, maxBodyLen - oldBody.length)).fill(""),
-      ...oldBody,
-    ];
-    const padNew = [
-      ...Array<string>(Math.max(0, maxBodyLen - newBody.length)).fill(""),
-      ...newBody,
-    ];
-    const padKeys = [
-      ...Array<number>(Math.max(0, maxBodyLen - oldBodyKeys.length)).fill(-1),
-      ...oldBodyKeys,
-    ];
-
-    const bodyOffset = maxBodyLen - newBody.length;
-    for (let i = 0; i < newBody.length; i++) {
-      const pi = bodyOffset + i;
-      newKeys[newPrefixLen + i] =
-        padNew[pi] === padOld[pi] && padKeys[pi] >= 0
-          ? padKeys[pi]
-          : nextIdRef.current++;
-    }
-
-    setDigitKeys(newKeys);
+    const result = reconcileDigitKeys(
+      prevText,
+      text,
+      digitKeys,
+      nextIdRef.current,
+    );
+    nextIdRef.current = result.nextId;
+    dirRef.current = result.direction;
+    setDigitKeys(result.keys);
     setPrevText(text);
   }
 
@@ -136,7 +93,11 @@ export function NumberRenderer({
                       key={digitKeys[i]}
                       aria-hidden="true"
                       initial={{
-                        y: isDigit(char) ? (dir > 0 ? distance : -distance) : 0,
+                        y: isDigit(char)
+                          ? dir > 0
+                            ? DIGIT_DISTANCE
+                            : -DIGIT_DISTANCE
+                          : 0,
                         filter: "blur(2px)",
                         scale: 0.5,
                         opacity: 0,
@@ -149,7 +110,11 @@ export function NumberRenderer({
                         transition: { delay },
                       }}
                       exit={{
-                        y: isDigit(char) ? (dir > 0 ? -distance : distance) : 0,
+                        y: isDigit(char)
+                          ? dir > 0
+                            ? -DIGIT_DISTANCE
+                            : DIGIT_DISTANCE
+                          : 0,
                         opacity: 0,
                         filter: "blur(2px)",
                         scale: 0.5,

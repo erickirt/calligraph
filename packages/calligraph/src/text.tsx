@@ -1,47 +1,7 @@
 import type { Transition } from "motion/react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useRef, useState } from "react";
-
-function computeLCS(oldStr: string, newStr: string): [number, number][] {
-  const m = oldStr.length;
-  const n = newStr.length;
-  const dp: number[][] = [];
-
-  for (let i = 0; i <= m; i++) {
-    dp[i] = [];
-    for (let j = 0; j <= n; j++) {
-      if (i === 0 || j === 0) {
-        dp[i][j] = 0;
-      } else if (oldStr[i - 1] === newStr[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1;
-      } else {
-        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-      }
-    }
-  }
-
-  const pairs: [number, number][] = [];
-  let i = m;
-  let j = n;
-
-  while (i > 0 && j > 0) {
-    if (oldStr[i - 1] === newStr[j - 1]) {
-      pairs.push([i - 1, j - 1]);
-      i--;
-      j--;
-    } else if (
-      dp[i - 1][j] > dp[i][j - 1] ||
-      (dp[i - 1][j] === dp[i][j - 1] && i >= j)
-    ) {
-      i--;
-    } else {
-      j--;
-    }
-  }
-
-  pairs.reverse();
-  return pairs;
-}
+import { reconcileTextKeys } from "./reconcile";
 
 export function TextRenderer({
   text,
@@ -75,29 +35,16 @@ export function TextRenderer({
   const [changeRatio, setChangeRatio] = useState(0);
 
   if (text !== prevText) {
-    const matches = computeLCS(prevText, text);
-    const newKeys: string[] = new Array(text.length).fill("");
-
-    for (const [oldIdx, newIdx] of matches) {
-      newKeys[newIdx] = charKeys[oldIdx];
-    }
-
-    let newCount = 0;
-    for (let i = 0; i < newKeys.length; i++) {
-      if (!newKeys[i]) {
-        newKeys[i] = `c${nextIdRef.current++}`;
-        newCount++;
-      }
-    }
-
-    const keptCount = text.length - newCount;
-    const removedCount = prevText.length - keptCount;
-    const totalChange = newCount + removedCount;
-    const maxLen = Math.max(text.length, prevText.length);
-
+    const result = reconcileTextKeys(
+      prevText,
+      text,
+      charKeys,
+      nextIdRef.current,
+    );
+    nextIdRef.current = result.nextId;
     setPrevText(text);
-    setCharKeys(newKeys);
-    setChangeRatio(maxLen > 0 ? totalChange / maxLen : 1);
+    setCharKeys(result.keys);
+    setChangeRatio(result.changeRatio);
   }
 
   return (

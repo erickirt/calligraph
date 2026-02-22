@@ -4,17 +4,9 @@ import type { Transition } from "motion/react";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import { NumberRenderer } from "./number";
+import { type Animation, animations } from "./shared";
 import { SlotsRenderer } from "./slots";
 import { TextRenderer } from "./text";
-
-const animations = {
-  default: { duration: 0.38, ease: [0.19, 1, 0.22, 1] },
-  smooth: { type: "spring", duration: 0.5, bounce: 0 },
-  snappy: { type: "spring", duration: 0.35, bounce: 0.15 },
-  bouncy: { type: "spring", duration: 0.5, bounce: 0.3 },
-} satisfies Record<string, Transition>;
-
-type Animation = keyof typeof animations;
 
 export type CalligraphProps = Omit<
   React.ComponentPropsWithoutRef<"span">,
