@@ -1,25 +1,3 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-block: 64px;
-}
-
-.footer {
-  padding-top: 48px;
-  font-size: 13px;
-  color: var(--gray-8);
-}
-
-.footerLink {
-  color: var(--gray-11);
-  transition: color 0.15s;
-}
-
-.footerLink:hover {
-  color: var(--gray-12);
-}
-
 .heading {
   display: flex;
   gap: 10px;
@@ -117,12 +95,6 @@
   font-size: 12px;
   background: var(--gray-2);
   border-radius: 4px;
-}
-
-@media (max-width: 560px) {
-  .page {
-    padding-block: 64px;
-  }
 }
 
 .content {

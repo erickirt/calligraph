@@ -1,6 +1,7 @@
 import { Agentation } from "agentation";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Footer } from "@/components/footer";
 import "@/styles/index.css";
 
 const openRunde = localFont({
@@ -72,6 +73,7 @@ export default function RootLayout({
     <html lang="en" className={openRunde.variable}>
       <body>
         {children}
+        <Footer />
         {process.env.NODE_ENV === "development" && <Agentation />}
       </body>
     </html>

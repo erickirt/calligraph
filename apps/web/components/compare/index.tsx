@@ -2,7 +2,8 @@
 
 import NumberFlow from "@number-flow/react";
 import { Calligraph } from "calligraph";
-import { useState } from "react";
+import Link from "next/link";
+import React, { useState } from "react";
 import { TextMorph } from "torph/react";
 import { Check } from "../icons/check";
 import { Cross } from "../icons/cross";
@@ -10,33 +11,120 @@ import styles from "./styles.module.css";
 
 const words = ["Calligraph", "Craft", "Creative", "Create"];
 const numbers = [35.99, 24.89, 17.38, 3.15];
+const spins = [1204, 387, 52, 9631];
 
 const fmt = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
 
+const libs = ["calligraph", "torph", "numberflow"] as const;
+
+type Lib = (typeof libs)[number];
+
+const libLabels: Record<Lib, string> = {
+  calligraph: "Calligraph",
+  torph: "Torph",
+  numberflow: "NumberFlow",
+};
+
 type Row =
-  | { label: string; values: [boolean, boolean, boolean] }
+  | ({ label: string } & Record<Lib, boolean>)
   | { kind: "divider"; label: string };
 
 const rows: Row[] = [
-  { kind: "divider", label: "Capabilities" },
-  { label: "Text transitions", values: [true, true, false] },
-  { label: "Number transitions", values: [true, true, true] },
-  { label: "Digit spin (slots)", values: [true, false, true] },
-  { label: "Auto-size", values: [true, false, false] },
-  { label: "Spring physics", values: [true, false, false] },
-  { label: "Stagger", values: [true, false, false] },
-  { label: "Intl formatting", values: [false, false, true] },
-  { label: "Plugins", values: [false, false, true] },
+  { kind: "divider", label: "Animation" },
+  {
+    label: "Text",
+    calligraph: true,
+    torph: true,
+    numberflow: false,
+  },
+  {
+    label: "Number",
+    calligraph: true,
+    torph: true,
+    numberflow: true,
+  },
+  {
+    label: "Slots",
+    calligraph: true,
+    torph: false,
+    numberflow: true,
+  },
+  {
+    label: "Springs",
+    calligraph: true,
+    torph: false,
+    numberflow: false,
+  },
+  { label: "Stagger", calligraph: true, torph: false, numberflow: false },
+  { label: "Auto-size", calligraph: true, torph: false, numberflow: true },
+  {
+    label: "Trend direction",
+    calligraph: false,
+    torph: false,
+    numberflow: true,
+  },
+
+  { kind: "divider", label: "Formatting" },
+  {
+    label: "Formatting",
+    calligraph: true,
+    torph: true,
+    numberflow: true,
+  },
+  { label: "Plugins", calligraph: false, torph: false, numberflow: true },
+
   { kind: "divider", label: "Architecture" },
-  { label: "Text + number focus", values: [true, true, false] },
-  { label: "Zero dependencies", values: [false, true, false] },
-  { label: "ESM only", values: [true, false, false] },
-  { label: "Multi-framework", values: [false, true, true] },
-  { label: "Custom wrapper element", values: [true, true, false] },
-  { label: "Reduced motion", values: [true, true, true] },
+
+  {
+    label: "Dependencies",
+    calligraph: true,
+    torph: false,
+    numberflow: false,
+  },
+  // {
+  //   label: "Multi-framework",
+  //   calligraph: false,
+  //   torph: true,
+  //   numberflow: true,
+  // },
+  {
+    label: "React",
+    calligraph: true,
+    torph: true,
+    numberflow: true,
+  },
+  {
+    label: "Vue",
+    calligraph: false,
+    torph: true,
+    numberflow: true,
+  },
+  {
+    label: "Svelte",
+    calligraph: false,
+    torph: true,
+    numberflow: true,
+  },
+  {
+    label: "Angular",
+    calligraph: false,
+    torph: true,
+    numberflow: true,
+  },
+  { label: "TypeScript", calligraph: true, torph: true, numberflow: true },
+  { label: "SSR compatible", calligraph: true, torph: true, numberflow: true },
+
+  { kind: "divider", label: "Accessibility" },
+  { label: "Reduced motion", calligraph: true, torph: true, numberflow: true },
+  {
+    label: "Screen reader friendly",
+    calligraph: true,
+    torph: true,
+    numberflow: true,
+  },
 ];
 
 function Section({
@@ -59,12 +147,14 @@ function Panel({
   children,
 }: {
   label: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   return (
     <div className={styles.panel}>
       <span className={styles.badge}>{label}</span>
-      <div className={styles.panelContent}>{children}</div>
+      <div className={styles.panelContent}>
+        {children ?? <span className={styles.placeholder}>N/A</span>}
+      </div>
     </div>
   );
 }
@@ -77,26 +167,30 @@ function Cell({ value }: { value: boolean }) {
 export function ComparePage() {
   const [textIndex, setTextIndex] = useState(0);
   const [numberIndex, setNumberIndex] = useState(0);
+  const [spinIndex, setSpinIndex] = useState(0);
 
   const cycleText = () => setTextIndex((i) => (i + 1) % words.length);
   const cycleNumber = () => setNumberIndex((i) => (i + 1) % numbers.length);
+  const cycleSpin = () => setSpinIndex((i) => (i + 1) % spins.length);
 
   const word = words[textIndex];
   const value = numbers[numberIndex];
+  const spin = spins[spinIndex];
 
   return (
-    <div className={styles.page}>
+    <React.Fragment>
       <div className={styles.heading}>
-        <h1 className={styles.title}>Compare</h1>
+        <h1 className={styles.title}> Comparisons</h1>
       </div>
 
       <p className={styles.description}>
-        Calligraph vs Torph vs NumberFlow — interactive demos and feature
-        comparison.
+        Three libraries that animate text and numbers on the web, each with a
+        different philosophy. Below you can interact with each library
+        side-by-side and see exactly where they overlap and where they diverge.
       </p>
 
       <div>
-        <Section title="Text Transitions">
+        <Section title="Text">
           <Panel label="Calligraph">
             <button type="button" className={styles.button} onClick={cycleText}>
               <Calligraph variant="text" className={styles.animatedText}>
@@ -109,14 +203,10 @@ export function ComparePage() {
               <TextMorph className={styles.animatedText}>{word}</TextMorph>
             </button>
           </Panel>
-          <Panel label="NumberFlow">
-            <span className={styles.animatedText} style={{ opacity: 0.4 }}>
-              N/A
-            </span>
-          </Panel>
+          <Panel label="NumberFlow" />
         </Section>
 
-        <Section title="Number Transitions">
+        <Section title="Number">
           <Panel label="Calligraph">
             <button
               type="button"
@@ -124,7 +214,7 @@ export function ComparePage() {
               onClick={cycleNumber}
             >
               <Calligraph variant="number" className={styles.animatedText}>
-                {fmt.format(value)}
+                {value.toLocaleString()}
               </Calligraph>
             </button>
           </Panel>
@@ -135,7 +225,7 @@ export function ComparePage() {
               onClick={cycleNumber}
             >
               <TextMorph className={styles.animatedText}>
-                {fmt.format(value)}
+                {value.toLocaleString()}
               </TextMorph>
             </button>
           </Panel>
@@ -147,44 +237,25 @@ export function ComparePage() {
             >
               <NumberFlow
                 value={value}
-                format={{ style: "currency", currency: "USD" }}
                 className={`${styles.animatedText} ${styles.numberFlow}`}
               />
             </button>
           </Panel>
         </Section>
 
-        <Section title="Digit Spin (Slots)">
-          <Panel label="Calligraph (slots)">
-            <button
-              type="button"
-              className={styles.button}
-              onClick={cycleNumber}
-            >
+        <Section title="Spins">
+          <Panel label="Calligraph">
+            <button type="button" className={styles.button} onClick={cycleSpin}>
               <Calligraph variant="slots" className={styles.animatedText}>
-                {fmt.format(value)}
+                {fmt.format(spin)}
               </Calligraph>
             </button>
           </Panel>
-          <Panel label="Calligraph (number)">
-            <button
-              type="button"
-              className={styles.button}
-              onClick={cycleNumber}
-            >
-              <Calligraph variant="number" className={styles.animatedText}>
-                {fmt.format(value)}
-              </Calligraph>
-            </button>
-          </Panel>
+          <Panel label="Torph" />
           <Panel label="NumberFlow">
-            <button
-              type="button"
-              className={styles.button}
-              onClick={cycleNumber}
-            >
+            <button type="button" className={styles.button} onClick={cycleSpin}>
               <NumberFlow
-                value={value}
+                value={spin}
                 format={{ style: "currency", currency: "USD" }}
                 className={`${styles.animatedText} ${styles.numberFlow}`}
               />
@@ -194,15 +265,19 @@ export function ComparePage() {
       </div>
 
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Feature Comparison</h2>
-
         <table className={styles.table}>
+          <colgroup>
+            <col style={{ width: "40%" }} />
+            {libs.map((lib) => (
+              <col key={lib} style={{ width: "20%" }} />
+            ))}
+          </colgroup>
           <thead>
             <tr>
-              <th />
-              <th>Calligraph</th>
-              <th>Torph</th>
-              <th>NumberFlow</th>
+              <th>Feature</th>
+              {libs.map((lib) => (
+                <th key={lib}>{libLabels[lib]}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -210,7 +285,7 @@ export function ComparePage() {
               if ("kind" in row) {
                 return (
                   <tr key={row.label} className={styles.groupRow}>
-                    <td colSpan={4}>{row.label}</td>
+                    <td colSpan={libs.length + 1}>{row.label}</td>
                   </tr>
                 );
               }
@@ -218,42 +293,17 @@ export function ComparePage() {
               return (
                 <tr key={row.label}>
                   <td>{row.label}</td>
-                  <td>
-                    <Cell value={row.values[0]} />
-                  </td>
-                  <td>
-                    <Cell value={row.values[1]} />
-                  </td>
-                  <td>
-                    <Cell value={row.values[2]} />
-                  </td>
+                  {libs.map((lib) => (
+                    <td key={lib}>
+                      <Cell value={row[lib]} />
+                    </td>
+                  ))}
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-
-      <footer className={styles.footer}>
-        by{" "}
-        <a
-          href="https://x.com/intent/follow?screen_name=raphaelsalaja"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.footerLink}
-        >
-          raphael salaja
-        </a>
-        {" / "}
-        <a
-          href="https://userinterface.wiki"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.footerLink}
-        >
-          userinterface.wiki
-        </a>
-      </footer>
-    </div>
+    </React.Fragment>
   );
 }

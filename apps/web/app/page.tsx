@@ -38,7 +38,6 @@ function Reveal({
 export default function Page() {
   return (
     <motion.div
-      className={styles.page}
       initial="initial"
       animate="animate"
       transition={{ staggerChildren: 0.06 }}
@@ -93,27 +92,6 @@ export default function Page() {
         <Section title="Usage">
           <CodeBlock>{usage}</CodeBlock>
         </Section>
-      </Reveal>
-
-      <Reveal as="footer" className={styles.footer}>
-        by{" "}
-        <a
-          href="https://x.com/intent/follow?screen_name=raphaelsalaja"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.footerLink}
-        >
-          raphael salaja
-        </a>
-        {" / "}
-        <a
-          href="https://userinterface.wiki"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.footerLink}
-        >
-          userinterface.wiki
-        </a>
       </Reveal>
     </motion.div>
   );

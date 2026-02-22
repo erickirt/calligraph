@@ -1,6 +1,7 @@
 @import "@radix-ui/colors/gray.css";
 @import "@radix-ui/colors/gray-alpha.css";
-@import "@radix-ui/colors/gray-dark.css";
+@import "@radix-ui/colors/grass.css";
+@import "@radix-ui/colors/tomato.css";
 
 @import "./styles.reset.css";
 
@@ -33,8 +34,12 @@ html {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   max-width: 640px;
   min-height: 100dvh;
+  padding-block: 64px;
   padding-inline: 16px;
   margin: 0 auto;
 }
