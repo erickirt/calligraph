@@ -49,13 +49,3 @@
   line-height: 1.5;
   color: var(--gray-12);
 }
-
-@media (max-width: 560px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .card {
-    min-height: 80px;
-  }
-}
