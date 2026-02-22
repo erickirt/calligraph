@@ -1,9 +1,7 @@
-"use client";
-
 import pkg from "calligraph/package.json" with { type: "json" };
-import { motion } from "motion/react";
 import { CodeBlock } from "../components/code-block";
 import { Demo } from "../components/demo";
+import { Features } from "../components/features";
 import styles from "./styles.module.css";
 
 const usage = `import { Calligraph } from "calligraph";
@@ -11,38 +9,10 @@ const usage = `import { Calligraph } from "calligraph";
 <Calligraph>Text</Calligraph>
 `;
 
-const transition = { duration: 0.5, ease: [0.19, 1, 0.22, 1] as const };
-
-const item = {
-  initial: { opacity: 0, filter: "blur(4px)", y: 8 },
-  animate: { opacity: 1, filter: "blur(0px)", y: 0 },
-};
-
-function Reveal({
-  children,
-  className,
-  as = "div",
-}: {
-  children: React.ReactNode;
-  className?: string;
-  as?: "div" | "p" | "footer";
-}) {
-  const Tag = motion[as];
-  return (
-    <Tag className={className} variants={item} transition={transition}>
-      {children}
-    </Tag>
-  );
-}
-
 export default function Page() {
   return (
-    <motion.div
-      initial="initial"
-      animate="animate"
-      transition={{ staggerChildren: 0.06 }}
-    >
-      <Reveal className={styles.heading}>
+    <>
+      <div className={styles.heading}>
         <h1 className={styles.title}>Calligraph</h1>
         <div className={styles.versionContainer}>
           <a
@@ -72,28 +42,24 @@ export default function Page() {
             </svg>
           </a>
         </div>
-      </Reveal>
+      </div>
 
-      <Reveal as="p" className={styles.description}>
+      <p className={styles.description}>
         Fluid text transitions powered by Motion.
-      </Reveal>
+      </p>
 
-      <Reveal>
-        <Demo />
-      </Reveal>
+      <Demo />
 
-      <Reveal>
-        <Section title="Installation">
-          <CodeBlock terminal>npm install calligraph</CodeBlock>
-        </Section>
-      </Reveal>
+      <Features />
 
-      <Reveal>
-        <Section title="Usage">
-          <CodeBlock>{usage}</CodeBlock>
-        </Section>
-      </Reveal>
-    </motion.div>
+      <Section title="Installation">
+        <CodeBlock terminal>npm install calligraph</CodeBlock>
+      </Section>
+
+      <Section title="Usage">
+        <CodeBlock>{usage}</CodeBlock>
+      </Section>
+    </>
   );
 }
 

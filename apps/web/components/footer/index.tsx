@@ -23,6 +23,7 @@ export function Footer() {
       </div>
       <div className={styles.links}>
         <Link href="/">home</Link>
+        <Link href="/lab">lab</Link>
         <Link href="/compare">compare</Link>
       </div>
     </footer>
