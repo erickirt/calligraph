@@ -64,9 +64,7 @@ function SlotColumn({
 }) {
   const isPresent = useIsPresent();
   const spinIn = Math.max(digit, 1);
-  const startValue = animateIn
-    ? digit - spinIn * (direction || 1)
-    : digit;
+  const startValue = animateIn ? digit - spinIn * (direction || 1) : digit;
   const current = useMotionValue(startValue);
   const cumulativeRef = useRef(digit);
   const prevDigitRef = useRef(digit);
