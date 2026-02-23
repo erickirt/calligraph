@@ -4,6 +4,7 @@ import {
   animate,
   MotionConfig,
   motion,
+  useIsPresent,
   useMotionValue,
   useTransform,
 } from "motion/react";
@@ -21,7 +22,13 @@ function DigitNum({
   const y = useTransform(current, (c) => {
     let offset = mod(n - c, 10);
     if (offset > 5) offset -= 10;
-    return `${offset * 100}%`;
+    return `${-offset * 100}%`;
+  });
+
+  const opacity = useTransform(current, (c) => {
+    let offset = mod(n - c, 10);
+    if (offset > 5) offset -= 10;
+    return Math.max(0, 1 - Math.abs(offset));
   });
 
   return (
@@ -29,12 +36,12 @@ function DigitNum({
       aria-hidden
       style={{
         position: "absolute",
-        top: "0.15em",
+        top: 0,
         left: 0,
-        width: "100%",
         display: "inline-block",
         whiteSpace: "pre",
         y,
+        opacity,
       }}
     >
       {n}
@@ -44,18 +51,26 @@ function DigitNum({
 
 const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
+const SPIN_DISTANCE = 4;
+
 function SlotColumn({
   digit,
   direction,
   transition,
   delay,
+  animateIn,
 }: {
   digit: number;
   direction: number;
   transition: Transition;
   delay: number;
+  animateIn: boolean;
 }) {
-  const current = useMotionValue(digit);
+  const isPresent = useIsPresent();
+  const startValue = animateIn
+    ? digit - SPIN_DISTANCE * (direction || 1)
+    : digit;
+  const current = useMotionValue(startValue);
   const cumulativeRef = useRef(digit);
   const prevDigitRef = useRef(digit);
   const initialRef = useRef(true);
@@ -77,9 +92,21 @@ function SlotColumn({
   }
 
   useEffect(() => {
+    if (!isPresent) {
+      animate(
+        current,
+        cumulativeRef.current + SPIN_DISTANCE * (direction || 1),
+        {
+          ...transition,
+          delay,
+        },
+      );
+      return;
+    }
+
     if (initialRef.current) {
       initialRef.current = false;
-      return;
+      if (!animateIn) return;
     }
 
     animate(current, cumulativeRef.current, {
@@ -88,27 +115,18 @@ function SlotColumn({
     });
   });
 
-  const pad = "0.15em";
-
   return (
     <span
       style={{
         display: "inline-block",
         position: "relative",
-        height: `calc(1lh + ${pad} * 2)`,
-        overflow: "hidden",
         verticalAlign: "top",
-        margin: `calc(-1 * ${pad}) 0`,
-        maskImage: `linear-gradient(to bottom, transparent 0%, black ${pad}, black calc(100% - ${pad}), transparent 100%)`,
-        WebkitMaskImage: `linear-gradient(to bottom, transparent 0%, black ${pad}, black calc(100% - ${pad}), transparent 100%)`,
       }}
     >
       <span
         style={{
           visibility: "hidden",
           whiteSpace: "pre",
-          paddingTop: pad,
-          paddingBottom: pad,
           display: "inline-block",
         }}
       >
@@ -150,6 +168,11 @@ export function SlotsRenderer({
     chars.map((_, i) => i),
   );
   const dirRef = useRef(1);
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+  }, []);
 
   if (text !== prevText) {
     const result = reconcileDigitKeys(
@@ -207,7 +230,7 @@ export function SlotsRenderer({
               );
             }
 
-            const delay = digitIndex * stagger;
+            const delay = (digitCount - 1 - digitIndex) * stagger;
             const isLast = digitIndex === digitCount - 1;
             digitIndex++;
 
@@ -228,6 +251,7 @@ export function SlotsRenderer({
                   direction={dir}
                   transition={transition}
                   delay={delay}
+                  animateIn={mountedRef.current || animateInitial}
                 />
               </motion.span>
             );

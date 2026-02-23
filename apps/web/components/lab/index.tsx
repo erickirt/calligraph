@@ -13,7 +13,7 @@ type Animation = (typeof animations)[number];
 const presets: Record<Variant, string[]> = {
   text: ["Calligraph", "Craft", "Creative", "Create"],
   number: ["$35.99", "$24.89", "$17.38", "$3.15"],
-  slots: ["$1,204", "$387", "$52", "$9,631"],
+  slots: ["$1.47", "$34.44", "$148.21", "$3.09"],
 };
 
 function parseValues(raw: string): string[] {
