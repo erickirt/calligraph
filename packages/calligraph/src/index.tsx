@@ -26,11 +26,9 @@ export type CalligraphProps = Omit<
 function AutoSizeWrapper({
   children,
   transition,
-  fade,
 }: {
   children: React.ReactNode;
   transition: Transition;
-  fade?: boolean;
 }) {
   const [element, setElement] = useState<HTMLElement | null>(null);
   const [width, setWidth] = useState(0);
@@ -48,26 +46,11 @@ function AutoSizeWrapper({
     return () => observer.disconnect();
   }, [element]);
 
-  const pad = "0.5lh";
-  const mask = fade
-    ? `linear-gradient(to bottom, transparent 0%, black ${pad}, black calc(100% - ${pad}), transparent 100%)`
-    : undefined;
-
   return (
     <motion.span
       animate={{ width: width > 0 ? width : "auto" }}
       transition={transition}
-      style={{
-        display: "inline-flex",
-        ...(fade && {
-          paddingTop: pad,
-          paddingBottom: pad,
-          marginTop: `calc(-1 * ${pad})`,
-          marginBottom: `calc(-1 * ${pad})`,
-          maskImage: mask,
-          WebkitMaskImage: mask,
-        }),
-      }}
+      style={{ display: "inline-flex", overflow: "hidden" }}
     >
       <span ref={ref} style={{ display: "inline-flex" }}>
         {children}
@@ -122,14 +105,7 @@ export function Calligraph(props: CalligraphProps) {
   } = props;
 
   const transition =
-    animations[
-      animation ??
-        (variant === "number"
-          ? "snappy"
-          : variant === "slots"
-            ? "smooth"
-            : "default")
-    ];
+    animations[animation ?? (variant === "number" ? "snappy" : "default")];
 
   const rendererProps = {
     text: String(children ?? ""),
@@ -156,11 +132,7 @@ export function Calligraph(props: CalligraphProps) {
   }
 
   if (autoSize) {
-    return (
-      <AutoSizeWrapper transition={transition} fade={variant === "slots"}>
-        {content}
-      </AutoSizeWrapper>
-    );
+    return <AutoSizeWrapper transition={transition}>{content}</AutoSizeWrapper>;
   }
 
   return content;

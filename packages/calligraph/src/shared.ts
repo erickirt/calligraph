@@ -10,7 +10,7 @@ export const DIGIT_DISTANCE = 8;
 
 export const animations = {
   default: { duration: 0.38, ease: [0.19, 1, 0.22, 1] },
-  smooth: { type: "spring", duration: 0.5, bounce: 0 },
+  smooth: { type: "spring", duration: 0.4, bounce: 0 },
   snappy: { type: "spring", duration: 0.35, bounce: 0.15 },
   bouncy: { type: "spring", duration: 0.5, bounce: 0.3 },
 } satisfies Record<string, Transition>;

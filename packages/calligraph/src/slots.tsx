@@ -22,13 +22,8 @@ function DigitNum({
   const y = useTransform(current, (c) => {
     let offset = mod(n - c, 10);
     if (offset > 5) offset -= 10;
-    return `${-offset * 100}%`;
-  });
-
-  const opacity = useTransform(current, (c) => {
-    let offset = mod(n - c, 10);
-    if (offset > 5) offset -= 10;
-    return Math.max(0, 1 - Math.abs(offset));
+    const clamped = Math.max(-1, Math.min(1, offset));
+    return `${-clamped * 100}%`;
   });
 
   return (
@@ -37,11 +32,11 @@ function DigitNum({
       style={{
         position: "absolute",
         top: 0,
-        left: 0,
+        left: "50%",
+        x: "-50%",
         display: "inline-block",
         whiteSpace: "pre",
         y,
-        opacity,
       }}
     >
       {n}
@@ -51,7 +46,8 @@ function DigitNum({
 
 const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
-const SPIN_DISTANCE = 4;
+const FADE_HEIGHT = "0.25em";
+const FADE_MASK = `linear-gradient(to bottom, transparent 0%, black ${FADE_HEIGHT}, black calc(100% - ${FADE_HEIGHT}), transparent 100%)`;
 
 function SlotColumn({
   digit,
@@ -67,8 +63,9 @@ function SlotColumn({
   animateIn: boolean;
 }) {
   const isPresent = useIsPresent();
+  const spinIn = Math.max(digit, 1);
   const startValue = animateIn
-    ? digit - SPIN_DISTANCE * (direction || 1)
+    ? digit - spinIn * (direction || 1)
     : digit;
   const current = useMotionValue(startValue);
   const cumulativeRef = useRef(digit);
@@ -93,14 +90,10 @@ function SlotColumn({
 
   useEffect(() => {
     if (!isPresent) {
-      animate(
-        current,
-        cumulativeRef.current + SPIN_DISTANCE * (direction || 1),
-        {
-          ...transition,
-          delay,
-        },
-      );
+      const spinOut = Math.max(digit, 1);
+      animate(current, cumulativeRef.current + spinOut * (direction || 1), {
+        ...transition,
+      });
       return;
     }
 
@@ -130,7 +123,7 @@ function SlotColumn({
           display: "inline-block",
         }}
       >
-        {digit}
+        0
       </span>
       {digits.map((n) => (
         <DigitNum key={n} n={n} current={current} />
@@ -145,7 +138,6 @@ export function SlotsRenderer({
   transition,
   stagger,
   animateInitial,
-  onComplete,
   className,
   style,
   rest,
@@ -208,55 +200,61 @@ export function SlotsRenderer({
         className={className}
         {...rest}
       >
-        <AnimatePresence mode="popLayout" initial={animateInitial}>
-          {chars.map((char, i) => {
-            const isPrefix = i < prefixLen;
-            const outerKey = isPrefix
-              ? `pre-${i}`
-              : `col-${chars.length - 1 - i}`;
+        <span
+          style={{
+            display: "inline-flex",
+            paddingTop: FADE_HEIGHT,
+            paddingBottom: FADE_HEIGHT,
+            marginTop: `calc(-1 * ${FADE_HEIGHT})`,
+            marginBottom: `calc(-1 * ${FADE_HEIGHT})`,
+            maskImage: FADE_MASK,
+            WebkitMaskImage: FADE_MASK,
+          }}
+        >
+          <AnimatePresence mode="popLayout" initial={animateInitial}>
+            {chars.map((char, i) => {
+              const isPrefix = i < prefixLen;
+              const outerKey = isPrefix
+                ? `pre-${i}`
+                : `col-${chars.length - 1 - i}`;
 
-            if (isPrefix || !isDigit(char)) {
+              if (isPrefix || !isDigit(char)) {
+                return (
+                  <motion.span
+                    key={outerKey}
+                    layout="position"
+                    initial={false}
+                    exit={isPrefix ? undefined : { opacity: 0 }}
+                    style={{ display: "inline-block", whiteSpace: "pre" }}
+                  >
+                    {char}
+                  </motion.span>
+                );
+              }
+
+              const delay = (digitCount - 1 - digitIndex) * stagger;
+              digitIndex++;
+
               return (
                 <motion.span
                   key={outerKey}
                   layout="position"
-                  initial={isPrefix ? false : { opacity: 0 }}
-                  animate={isPrefix ? undefined : { opacity: 1 }}
-                  exit={isPrefix ? undefined : { opacity: 0 }}
-                  style={{ display: "inline-block", whiteSpace: "pre" }}
+                  initial={false}
+                  exit={{ opacity: 0 }}
+                  style={{ display: "inline-block" }}
                 >
-                  {char}
+                  <SlotColumn
+                    digit={Number(char)}
+                    direction={dir}
+                    transition={transition}
+                    delay={delay}
+                    animateIn={mountedRef.current || animateInitial}
+                  />
                 </motion.span>
               );
-            }
-
-            const delay = (digitCount - 1 - digitIndex) * stagger;
-            const isLast = digitIndex === digitCount - 1;
-            digitIndex++;
-
-            return (
-              <motion.span
-                key={outerKey}
-                layout="position"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onAnimationComplete={
-                  isLast && onComplete ? onComplete : undefined
-                }
-                style={{ display: "inline-block" }}
-              >
-                <SlotColumn
-                  digit={Number(char)}
-                  direction={dir}
-                  transition={transition}
-                  delay={delay}
-                  animateIn={mountedRef.current || animateInitial}
-                />
-              </motion.span>
-            );
-          })}
-        </AnimatePresence>
+            })}
+          </AnimatePresence>
+        </span>
       </Component>
     </MotionConfig>
   );

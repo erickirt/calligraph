@@ -2,4 +2,4 @@
 "calligraph": minor
 ---
 
-Rework slots animation: invert scroll direction, add per-digit opacity fade, right-to-left stagger, roll-in/out for entering and exiting digits, and move gradient mask to AutoSizeWrapper to prevent clipping
+Rework slots animation: clamped digit positioning, digit-based spin distance, popLayout exit with roll-out, container-level gradient mask, and NumberFlow-inspired rendering without per-digit opacity

@@ -10,7 +10,7 @@ import styles from "./styles.module.css";
 
 const words = ["Calligraph", "Craft", "Creative", "Create"];
 const numbers = [35.99, 24.89, 17.38, 3.15];
-const spins = [1204, 387, 52, 9631];
+const spins = [1.47, 34.44, 148.21, 3.09];
 
 const fmt = new Intl.NumberFormat("en-US", {
   style: "currency",
