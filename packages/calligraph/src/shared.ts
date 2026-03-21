@@ -1,5 +1,9 @@
 import type { Transition } from "motion/react";
 
+const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+export const splitGraphemes = (s: string): string[] =>
+  Array.from(segmenter.segment(s), (seg) => seg.segment);
+
 export const isDigit = (c: string) => c >= "0" && c <= "9";
 
 export function mod(n: number, m: number) {

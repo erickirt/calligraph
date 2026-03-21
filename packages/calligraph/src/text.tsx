@@ -2,6 +2,7 @@ import type { Transition } from "motion/react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useRef, useState } from "react";
 import { reconcileTextKeys } from "./reconcile";
+import { splitGraphemes } from "./shared";
 
 export function TextRenderer({
   text,
@@ -9,6 +10,7 @@ export function TextRenderer({
   transition,
   driftX,
   driftY,
+  trend,
   animateInitial,
   onComplete,
   className,
@@ -20,6 +22,7 @@ export function TextRenderer({
   transition: Transition;
   driftX: number;
   driftY: number;
+  trend: number;
   stagger: number;
   animateInitial: boolean;
   onComplete?: () => void;
@@ -27,10 +30,11 @@ export function TextRenderer({
   style?: React.CSSProperties;
   rest: Record<string, unknown>;
 }) {
-  const nextIdRef = useRef(text.length);
+  const graphemes = splitGraphemes(text);
+  const nextIdRef = useRef(graphemes.length);
   const [prevText, setPrevText] = useState(text);
   const [charKeys, setCharKeys] = useState<string[]>(() =>
-    text.split("").map((_, i) => `c${i}`),
+    graphemes.map((_, i) => `c${i}`),
   );
   const [changeRatio, setChangeRatio] = useState(0);
 
@@ -56,21 +60,41 @@ export function TextRenderer({
         {...rest}
       >
         <AnimatePresence mode="popLayout" initial={animateInitial}>
-          {text.split("").map((char: string, i: number) => {
+          {graphemes.map((char, i) => {
             const key = charKeys[i];
-            const progress = text.length <= 1 ? 0 : i / (text.length - 1);
+            const progress =
+              graphemes.length <= 1 ? 0 : i / (graphemes.length - 1);
             const offsetX = (progress - 0.5) * driftX * changeRatio;
             const offsetY = (progress - 0.5) * driftY * changeRatio;
-            const isLast = i === text.length - 1;
+            const trendY = trend * 8 * changeRatio;
+            const isLast = i === graphemes.length - 1;
 
             return (
               <motion.span
                 key={key}
                 aria-hidden="true"
                 layout="position"
-                initial={{ opacity: 0, x: offsetX, y: offsetY }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                exit={{ opacity: 0, x: offsetX, y: offsetY }}
+                initial={{
+                  opacity: 0,
+                  x: offsetX,
+                  y: offsetY + trendY,
+                  filter: "blur(4px)",
+                  scale: 0.85,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  y: 0,
+                  filter: "blur(0px)",
+                  scale: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                  x: offsetX,
+                  y: offsetY - trendY,
+                  filter: "blur(4px)",
+                  scale: 0.85,
+                }}
                 onAnimationComplete={
                   isLast && onComplete ? onComplete : undefined
                 }

@@ -2,7 +2,7 @@ import type { Transition } from "motion/react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useRef, useState } from "react";
 import { reconcileDigitKeys } from "./reconcile";
-import { DIGIT_DISTANCE, isDigit } from "./shared";
+import { DIGIT_DISTANCE, isDigit, splitGraphemes } from "./shared";
 
 export function NumberRenderer({
   text,
@@ -25,7 +25,7 @@ export function NumberRenderer({
   style?: React.CSSProperties;
   rest: Record<string, unknown>;
 }) {
-  const chars = text.split("");
+  const chars = splitGraphemes(text);
 
   const nextIdRef = useRef(chars.length);
   const [prevText, setPrevText] = useState(text);

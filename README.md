@@ -48,6 +48,12 @@ When `children` changes, characters common to both strings slide into their new 
 
 If Calligraph is useful to you or your team, consider [sponsoring the project](https://github.com/sponsors/raphaelsalaja).
 
+## See also
+
+- [Torph](https://github.com/lochie/torph) — dependency-free animated text morphing
+- [NumberFlow](https://github.com/barvian/number-flow) — animated number transitions
+- [NumericText](https://github.com/shizukushq/numeric-text) — SwiftUI-style `.numericText` for the web
+
 ## Acknowledgments
 
 - [Jace](https://github.com/jacethings) for pushing me to build this

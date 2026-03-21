@@ -1,8 +1,8 @@
-import { isDigit } from "./shared";
+import { isDigit, splitGraphemes } from "./shared";
 
-function computeLCS(oldStr: string, newStr: string): [number, number][] {
-  const m = oldStr.length;
-  const n = newStr.length;
+function computeLCS(oldSegs: string[], newSegs: string[]): [number, number][] {
+  const m = oldSegs.length;
+  const n = newSegs.length;
   const dp: number[][] = [];
 
   for (let i = 0; i <= m; i++) {
@@ -10,7 +10,7 @@ function computeLCS(oldStr: string, newStr: string): [number, number][] {
     for (let j = 0; j <= n; j++) {
       if (i === 0 || j === 0) {
         dp[i][j] = 0;
-      } else if (oldStr[i - 1] === newStr[j - 1]) {
+      } else if (oldSegs[i - 1] === newSegs[j - 1]) {
         dp[i][j] = dp[i - 1][j - 1] + 1;
       } else {
         dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
@@ -23,7 +23,7 @@ function computeLCS(oldStr: string, newStr: string): [number, number][] {
   let j = n;
 
   while (i > 0 && j > 0) {
-    if (oldStr[i - 1] === newStr[j - 1]) {
+    if (oldSegs[i - 1] === newSegs[j - 1]) {
       pairs.push([i - 1, j - 1]);
       i--;
       j--;
@@ -47,8 +47,10 @@ export function reconcileTextKeys(
   prevKeys: string[],
   nextId: number,
 ) {
-  const matches = computeLCS(prevText, newText);
-  const newKeys: string[] = new Array(newText.length).fill("");
+  const prevSegs = splitGraphemes(prevText);
+  const newSegs = splitGraphemes(newText);
+  const matches = computeLCS(prevSegs, newSegs);
+  const newKeys: string[] = new Array(newSegs.length).fill("");
 
   for (const [oldIdx, newIdx] of matches) {
     newKeys[newIdx] = prevKeys[oldIdx];
@@ -63,10 +65,10 @@ export function reconcileTextKeys(
     }
   }
 
-  const keptCount = newText.length - newCount;
-  const removedCount = prevText.length - keptCount;
+  const keptCount = newSegs.length - newCount;
+  const removedCount = prevSegs.length - keptCount;
   const totalChange = newCount + removedCount;
-  const maxLen = Math.max(newText.length, prevText.length);
+  const maxLen = Math.max(newSegs.length, prevSegs.length);
 
   return {
     keys: newKeys,
@@ -84,8 +86,8 @@ export function reconcileDigitKeys(
   const toNum = (s: string) => parseFloat(s.replace(/[^0-9.-]/g, "")) || 0;
   const direction = Math.sign(toNum(newText) - toNum(prevText));
 
-  const oldChars = prevText.split("");
-  const newChars = newText.split("");
+  const oldChars = splitGraphemes(prevText);
+  const newChars = splitGraphemes(newText);
 
   const firstDigitIndex = (arr: string[]) => {
     const idx = arr.findIndex((c) => isDigit(c));

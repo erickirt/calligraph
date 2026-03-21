@@ -1,6 +1,7 @@
 "use client";
 
 import NumberFlow from "@number-flow/react";
+import NumericText from "@numeric-text/react";
 import { Calligraph } from "calligraph";
 import React, { useState } from "react";
 import { TextMorph } from "torph/react";
@@ -17,7 +18,7 @@ const fmt = new Intl.NumberFormat("en-US", {
   currency: "USD",
 });
 
-const libs = ["calligraph", "torph", "numberflow"] as const;
+const libs = ["calligraph", "torph", "numberflow", "numerictext"] as const;
 
 type Lib = (typeof libs)[number];
 
@@ -25,6 +26,7 @@ const libLabels: Record<Lib, string> = {
   calligraph: "Calligraph",
   torph: "Torph",
   numberflow: "NumberFlow",
+  numerictext: "NumericText",
 };
 
 type Row =
@@ -38,32 +40,49 @@ const rows: Row[] = [
     calligraph: true,
     torph: true,
     numberflow: false,
+    numerictext: true,
   },
   {
     label: "Number",
     calligraph: true,
     torph: true,
     numberflow: true,
+    numerictext: true,
   },
   {
     label: "Slots",
     calligraph: true,
     torph: false,
     numberflow: true,
+    numerictext: false,
   },
   {
     label: "Springs",
     calligraph: true,
     torph: false,
     numberflow: false,
+    numerictext: false,
   },
-  { label: "Stagger", calligraph: true, torph: false, numberflow: false },
-  { label: "Auto-size", calligraph: true, torph: false, numberflow: true },
   {
-    label: "Trend direction",
-    calligraph: false,
+    label: "Stagger",
+    calligraph: true,
+    torph: false,
+    numberflow: false,
+    numerictext: true,
+  },
+  {
+    label: "Auto-size",
+    calligraph: true,
     torph: false,
     numberflow: true,
+    numerictext: false,
+  },
+  {
+    label: "Trend direction",
+    calligraph: true,
+    torph: false,
+    numberflow: true,
+    numerictext: true,
   },
 
   { kind: "divider", label: "Formatting" },
@@ -72,51 +91,81 @@ const rows: Row[] = [
     calligraph: true,
     torph: true,
     numberflow: true,
+    numerictext: true,
   },
-  { label: "Plugins", calligraph: false, torph: false, numberflow: true },
+  {
+    label: "Plugins",
+    calligraph: false,
+    torph: false,
+    numberflow: true,
+    numerictext: false,
+  },
 
   { kind: "divider", label: "Architecture" },
-
   {
     label: "Dependencies",
     calligraph: true,
     torph: false,
     numberflow: false,
+    numerictext: false,
   },
   {
     label: "React",
     calligraph: true,
     torph: true,
     numberflow: true,
+    numerictext: true,
   },
   {
     label: "Vue",
     calligraph: false,
     torph: true,
     numberflow: true,
+    numerictext: true,
   },
   {
     label: "Svelte",
     calligraph: false,
     torph: true,
     numberflow: true,
+    numerictext: true,
   },
   {
     label: "Angular",
     calligraph: false,
     torph: true,
     numberflow: true,
+    numerictext: false,
   },
-  { label: "TypeScript", calligraph: true, torph: true, numberflow: true },
-  { label: "SSR compatible", calligraph: true, torph: true, numberflow: true },
+  {
+    label: "TypeScript",
+    calligraph: true,
+    torph: true,
+    numberflow: true,
+    numerictext: true,
+  },
+  {
+    label: "SSR compatible",
+    calligraph: true,
+    torph: true,
+    numberflow: true,
+    numerictext: true,
+  },
 
   { kind: "divider", label: "Accessibility" },
-  { label: "Reduced motion", calligraph: true, torph: true, numberflow: true },
+  {
+    label: "Reduced motion",
+    calligraph: true,
+    torph: true,
+    numberflow: true,
+    numerictext: true,
+  },
   {
     label: "Screen reader friendly",
     calligraph: true,
     torph: true,
     numberflow: true,
+    numerictext: true,
   },
 ];
 
@@ -177,7 +226,7 @@ export function ComparePage() {
       </div>
 
       <p className={styles.description}>
-        Three libraries that animate text and numbers on the web, each with a
+        Four libraries that animate text and numbers on the web, each with a
         different philosophy. Below you can interact with each library
         side-by-side and see exactly where they overlap and where they diverge.
       </p>
@@ -197,6 +246,11 @@ export function ComparePage() {
             </button>
           </Panel>
           <Panel label="NumberFlow" />
+          <Panel label="NumericText">
+            <button type="button" className={styles.button} onClick={cycleText}>
+              <NumericText value={word} className={styles.animatedText} />
+            </button>
+          </Panel>
         </Section>
 
         <Section title="Number">
@@ -234,6 +288,18 @@ export function ComparePage() {
               />
             </button>
           </Panel>
+          <Panel label="NumericText">
+            <button
+              type="button"
+              className={styles.button}
+              onClick={cycleNumber}
+            >
+              <NumericText
+                value={value.toLocaleString()}
+                className={styles.animatedText}
+              />
+            </button>
+          </Panel>
         </Section>
 
         <Section title="Spins">
@@ -254,15 +320,16 @@ export function ComparePage() {
               />
             </button>
           </Panel>
+          <Panel label="NumericText" />
         </Section>
       </div>
 
       <div className={styles.section}>
         <table className={styles.table}>
           <colgroup>
-            <col style={{ width: "40%" }} />
+            <col style={{ width: "32%" }} />
             {libs.map((lib) => (
-              <col key={lib} style={{ width: "20%" }} />
+              <col key={lib} style={{ width: "17%" }} />
             ))}
           </colgroup>
           <thead>

@@ -10,7 +10,7 @@ import {
 } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { reconcileDigitKeys } from "./reconcile";
-import { isDigit, mod } from "./shared";
+import { isDigit, mod, splitGraphemes } from "./shared";
 
 function DigitNum({
   n,
@@ -150,7 +150,7 @@ export function SlotsRenderer({
   style?: React.CSSProperties;
   rest: Record<string, unknown>;
 }) {
-  const chars = text.split("");
+  const chars = splitGraphemes(text);
 
   const nextIdRef = useRef(chars.length);
   const [prevText, setPrevText] = useState(text);

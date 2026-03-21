@@ -17,6 +17,7 @@ export type CalligraphProps = Omit<
   animation?: Animation;
   as?: React.ElementType;
   drift?: { x?: number; y?: number };
+  trend?: 1 | -1 | 0;
   stagger?: number;
   initial?: boolean;
   onComplete?: () => void;
@@ -40,7 +41,7 @@ function AutoSizeWrapper({
   useEffect(() => {
     if (!element) return;
     const observer = new ResizeObserver(([entry]) => {
-      setWidth(entry.contentRect.width);
+      setWidth(Math.ceil(entry.contentRect.width));
     });
     observer.observe(element);
     return () => observer.disconnect();
@@ -50,7 +51,7 @@ function AutoSizeWrapper({
     <motion.span
       animate={{ width: width > 0 ? width : "auto" }}
       transition={transition}
-      style={{ display: "inline-flex", overflow: "hidden" }}
+      style={{ display: "inline-flex" }}
     >
       <span ref={ref} style={{ display: "inline-flex" }}>
         {children}
@@ -77,6 +78,10 @@ function AutoSizeWrapper({
  * characters. `{ x, y }` — scaled by the fraction of characters that changed.
  * Only applies to `variant="text"`. Defaults to `{ x: 15, y: 0 }`.
  *
+ * @param props.trend - Vertical animation direction for entering/exiting
+ * characters. `1` = enter from below, `-1` = enter from above, `0` = no
+ * vertical trend. Only applies to `variant="text"`. Defaults to `0`.
+ *
  * @param props.stagger - Seconds of delay spread across characters.
  * Defaults to `0.02`.
  *
@@ -95,6 +100,7 @@ export function Calligraph(props: CalligraphProps) {
     animation,
     as: Component = "span",
     drift: { x: driftX = 15, y: driftY = 0 } = {},
+    trend = 0,
     stagger = 0.02,
     initial: animateInitial = false,
     onComplete,
@@ -127,7 +133,12 @@ export function Calligraph(props: CalligraphProps) {
     content = <SlotsRenderer {...rendererProps} />;
   } else {
     content = (
-      <TextRenderer {...rendererProps} driftX={driftX} driftY={driftY} />
+      <TextRenderer
+        {...rendererProps}
+        driftX={driftX}
+        driftY={driftY}
+        trend={trend}
+      />
     );
   }
 
