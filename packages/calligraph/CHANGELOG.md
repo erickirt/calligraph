@@ -1,5 +1,11 @@
 # calligraph
 
+## 1.4.0
+
+### Minor Changes
+
+- 0eb2f39: Add grapheme-safe text splitting via `Intl.Segmenter`, blur and scale to text enter/exit animations, and a `trend` prop for directional vertical motion on the text variant.
+
 ## 1.3.0
 
 ### Minor Changes
