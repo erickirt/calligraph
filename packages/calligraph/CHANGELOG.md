@@ -1,5 +1,11 @@
 # calligraph
 
+## 1.4.1
+
+### Patch Changes
+
+- 02a0329: Fix typecheck failure by adding `ES2022.Intl` to tsconfig lib for `Intl.Segmenter` types.
+
 ## 1.4.0
 
 ### Minor Changes
