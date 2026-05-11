@@ -27,11 +27,7 @@ export function NumberRenderer({
   const [direction, setDirection] = useState(1);
 
   if (text !== prevText) {
-    const result = reconcileDigitKeys(prevText,
-        text,
-        digitKeys,
-        nextId
-    );
+    const result = reconcileDigitKeys(prevText, text, digitKeys, nextId);
     setNextId(result.nextId);
     setDirection(result.direction);
     setDigitKeys(result.keys);

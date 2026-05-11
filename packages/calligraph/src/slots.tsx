@@ -144,26 +144,21 @@ export function SlotsRenderer({
 }) {
   const chars = splitGraphemes(text);
 
-  const nextIdRef = useRef(chars.length);
+  const [nextId, setNextId] = useState(chars.length);
   const [prevText, setPrevText] = useState(text);
   const [digitKeys, setDigitKeys] = useState<number[]>(() =>
     chars.map((_, i) => i),
   );
   const [direction, setDirection] = useState(1);
-  const mountedRef = useRef(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    mountedRef.current = true;
+    setIsMounted(true);
   }, []);
 
   if (text !== prevText) {
-    const result = reconcileDigitKeys(
-      prevText,
-      text,
-      digitKeys,
-      nextIdRef.current,
-    );
-    nextIdRef.current = result.nextId;
+    const result = reconcileDigitKeys(prevText, text, digitKeys, nextId);
+    setNextId(result.nextId);
     setDirection(result.direction);
     setDigitKeys(result.keys);
     setPrevText(text);
@@ -227,7 +222,7 @@ export function SlotsRenderer({
                   direction={direction}
                   transition={transition}
                   delay={delay}
-                  animateIn={mountedRef.current || animateInitial}
+                  animateIn={isMounted || animateInitial}
                 />
               </motion.span>
             );
